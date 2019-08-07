@@ -1,0 +1,25 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        {% for meal_type in meals %}
+            {{meal_type.meal_title}}
+            {{meal_type.chef_name}}
+            {{meal_type.prep_time}}
+            {{meal_type.cook_time}}
+            {{meal_type.servings}}
+            {{meal_type.meal_type}}
+            {{meal_type.cuisine_type}}
+            {{meal_type.allergens}}
+            {{meal_type.likes}}
+            {{meal_type.dislikes}}
+            {{meal_type.comments}}
+            {{meal_type.image_url}}
+            {{meal_type.calories}}
+            {{meal_type.difficulty}}
+            {{meal_type.preperation_and_cookingg[2]}}
+            {{meal_type.Ingrediants_and_Tools[0]}}
+        {% endfor %}
+    </body>
+</html>
