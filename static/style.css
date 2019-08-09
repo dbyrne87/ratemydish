@@ -1,0 +1,265 @@
+/* General CSS & Multiple CSS Classes*/
+body {
+  text-align: center;
+  color: #FDFDFF;
+  padding:0 !important;
+  margin-top: 50px;
+  font-family: 'Sniglet', 'Comfortaa', cursive;
+  
+}
+
+a, a:hover {
+  text-decoration: none;
+  color:#FDFDFF;
+  
+}
+
+.nav-link, .card-header{
+  padding: 8px 25px !important;
+  color: #FDFDFF !important;
+  
+}
+
+
+@keyframes link-backgrounds {
+  from {color: #FDFDFF;}
+  to {color: #FED300;}
+}
+
+h1, h3{
+    color:#FDFDFF;
+    padding-top: 35px;
+}
+
+.jumbotron-fluid {
+background-image: url("/static/media/jumbotron image.jpg");
+background-size: cover;
+height: 100%;}
+
+hr{/*Horizontal Style Rule */
+    background-color:#FED300;
+    
+}
+
+#orTag{ /* The "OR" text in the #orTagLine*/
+    background:transparent; 
+    color: #FDFDFF;
+    font-size:x-large;
+}
+.sub-heading{
+  padding: 20px 0px;
+  border-bottom: 2px solid #FED300;
+}
+
+.modal-body{
+    color:black;
+}
+
+.black-tag{
+    color:black;
+}
+
+.black-tag:hover{
+    color:black;
+}
+
+.type-list{
+  border-bottom: 3px solid #FDFDFF;
+  background-image: linear-gradient(to right, #FDFDFF, #fed300);
+  background-size: 0 5px, auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  transition:all .8s ease-in-out;
+} 
+
+.type-list:hover{
+  background-size: 300% 5px, auto;
+}
+.btn{
+  font-size: 20px;
+  color: white;
+  background: #2ECC71;
+  margin: 20px;
+  border:none;
+  border-radius: 60px;
+  text-shadow: none;
+}
+
+.btn:hover{
+    animation-name: link-backgrounds;
+    animation-duration: 2s;
+}
+
+.sub-heading{
+    color:black;
+    
+}
+ /* Navbar*/
+ 
+.navbar, .modal-header{
+  padding:8px;
+  background-color:#2ecc71;
+  
+} 
+
+#logo{
+    max-height:40px;
+}
+
+.nav-item{
+  border-bottom: 3px solid #FDFDFF;
+  background-image: linear-gradient(to right, #FDFDFF, #fed300);
+  background-size: 0 5px, auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  transition:all .3s ease-in-out;
+  
+}
+
+.navbar-toggler{
+  top: 55px;
+  right:14px;
+  position: absolute;
+  padding: 2px;
+  
+}
+
+
+.nav-item:hover{
+  background-size: 100% 5px, auto;
+}
+
+ /* What We Do*/
+.card{
+  background-color:#2ecc71;
+  box-shadow: 10px 10px 4px rgba(0, 0, 0, .5);
+  
+}
+
+.card-body{
+  min-height: 96px;
+  background-color:white;
+  color:black;
+  
+}
+
+.clickable-container{
+  background-image: linear-gradient(to right, #3436E6, #E83C86);
+  background-size: 0 5px, auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  transition:all .2s ease-in-out;
+  padding: 8px 25px !important;
+  font-family: 'Sniglet', 'Comfortaa', cursive;
+  color: white !important;
+}
+
+.clickable-container:hover {
+  background-size: 100% 5px, auto;
+}
+
+.list-group-item{
+  border-bottom: 1px solid #E83C86;
+  background-image: linear-gradient(to right, #3436E6, #E83C86);
+  background-size: 0 5px, auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  transition:all .2s ease-in-out;
+  color:white;
+  
+}
+
+.list-group-item:hover{
+  background-size: 100% 5px, auto;
+
+}
+
+.contact-form-button{
+  margin: 20px 0px;
+  
+}
+
+.field-padding{
+  margin-bottom: 20px;
+  
+}
+
+ /* Footer*/
+.footer-icons{
+  padding-top: 20px;
+  margin-top: 20px;
+  
+}
+
+ /* The Band Page*/
+
+.our-band-collage{
+  padding:56px 40px 0px 40px;
+  max-height: 64vh;
+  max-width: 1100px;
+  
+}
+
+.our-band-page-header{
+  font-size: 1.75rem;
+  padding: 20px 0px;
+  border-bottom: 3px solid #E83C86;
+  font-family: 'Sniglet', 'Comfortaa', cursive;
+  
+}
+
+/* Our Music Page*/
+.adj-for-scroll{
+  margin: 0;
+  
+}
+
+/* Book Now Page*/
+.book-now-form-area{
+  padding-top: 56px;
+  
+}
+
+.radio-inline{
+  padding-right: 40px;
+  
+}
+
+/* Events Page*/
+.events-header{
+  padding-top: 56px;
+  
+}
+
+.events-videos{
+  margin-top: 30px;
+  
+}
+
+.events-bottom-borders{
+  padding: 20px 0px;
+  border-bottom: 3px solid #E83C86;
+  
+}
+@media (max-width:767px) {
+  .logo{
+    top: 5px;
+    left:12px;
+    position: absolute;
+    max-height: 41px;
+    
+  }
+     .fixed-top{
+     top: -40px;
+ }
+ .dropdown-padding{
+  padding-top: 40px;
+}
+}
+
+@media (max-width: 342px) {
+  .navbar-toggler{
+    margin-left: inherit;
+  
+ }
+}

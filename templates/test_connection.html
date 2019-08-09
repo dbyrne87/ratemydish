@@ -1,25 +1,202 @@
-<html>
-    <head>
+{% extends 'base.html' %} {% block content %}
 
-    </head>
-    <body>
-        {% for meal_type in meals %}
-            {{meal_type.meal_title}}
-            {{meal_type.chef_name}}
-            {{meal_type.prep_time}}
-            {{meal_type.cook_time}}
-            {{meal_type.servings}}
-            {{meal_type.meal_type}}
-            {{meal_type.cuisine_type}}
-            {{meal_type.allergens}}
-            {{meal_type.likes}}
-            {{meal_type.dislikes}}
-            {{meal_type.comments}}
-            {{meal_type.image_url}}
-            {{meal_type.calories}}
-            {{meal_type.difficulty}}
-            {{meal_type.preperation_and_cookingg[2]}}
-            {{meal_type.Ingrediants_and_Tools[0]}}
-        {% endfor %}
-    </body>
-</html>
+<body class="container-fluid">
+    <nav class="navbar navbar-light navbar-expand-md navbar-dark bg-gradient-1 fixed-top">
+        <div class="container dropdown-padding">
+            <a class="navbar-brand" href="index.html"><img id="logo" src="/static/media/icons8-food-50.png" alt="RateMyDish Logo"> <b>R</b>ate<b>M</b>y<b>D</b>ish</a>
+            <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbar-content">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/our-band.html">Login/Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/our-music.html">Add Recipe</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events.html">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/book-now.html">Log Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="jumbotron-fluid">
+            <h3>Search</h3>
+            <form>
+                <div class="form-group col-6 mx-auto">
+                    <input type="text" class="form-control" placeholder='"Lasagne","Cheese Pizza" etc.'>
+                    <a class="btn btn-primary btn-lg" href="#" role="button">Search</a>
+                </div>
+                <hr>
+                <h3>Or<br>Browse By Category</h3>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meal-type-category">Meal Type</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#quisine-type-category">Quisine Origin</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#special-diet-type-category">Special Diet</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#difficulty-type-category">Difficulty</button>
+
+            </form>
+            <!-- Modal -->
+            <div class="modal fade" id="meal-type-category" tabindex="-1" role="dialog" aria-labelledby="meal-type-category" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Meal Type</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            
+                                                       {% for meal_type in meal_type_category %}
+                                                       <p class="type-list"><a class="black-tag"href=#>{{meal_type.meal_type}}</a></p>
+                                                       <hr>
+                                                       {%endfor%} 
+                                                     
+                        </div>
+                    </div>
+                </div>
+            </div>
+                      <!-- Modal -->
+            <div class="modal fade" id="quisine-type-category" tabindex="-1" role="dialog" aria-labelledby="quisine-type-category" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">2</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <!-- Modal -->
+            <div class="modal fade" id="special-diet-type-category" tabindex="-1" role="dialog" aria-labelledby="special-diet-type-category" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">3</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <!-- Modal -->
+            <div class="modal fade" id="difficulty-type-category" tabindex="-1" role="dialog" aria-labelledby="difficulty-type-category" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">4</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <h3 class="col-xs-12 mx-auto text-center sub-heading">Most Liked</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+    {% for meal_type in most_liked[0:3]|sort(attribute='likes') %}
+    <div class="col-lg-4 mb-4">
+        <div class="card h-80 text-center text-white bg-gradient-1 d-none d-md-block">
+            <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
+            <h4 class="card-header">{{meal_type.meal_title}}</h4>
+            <div class="card-body">
+                <p class="card-text">{{meal_type.chef_name}}<br>{{meal_type.prep_time}}<br>{{meal_type.cook_time}}<br>{{meal_type.servings}}</p>
+            </div>
+            <a href="/recipe.html">
+                <div class="card-footer">
+                    <p class="clickable-container">Go To Recipe</p>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endfor %}
+</div>
+</div>
+<div class="container-fluid">
+        <h3 class="col-xs-12 mx-auto text-center sub-heading">Our Favourites</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+{% for meal_type in favourites[0:3]|sort(attribute='dislikes') %}
+    <div class="col-lg-4 mb-4">
+        <div class="card h-80 text-center text-white bg-gradient-1 d-none d-md-block">
+            <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
+            <h4 class="card-header">{{meal_type.meal_title}}</h4>
+            <div class="card-body">
+                <p class="card-text">{{meal_type.chef_name}}<br>{{meal_type.prep_time}}<br>{{meal_type.cook_time}}<br>{{meal_type.servings}}</p>
+            </div>
+            <a href="/recipe.html">
+                <div class="card-footer">
+                    <p class="clickable-container">Go To Recipe</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+{% endfor %}
+</div>
+</div>
+
+    <form class="col-lg-6">
+        <div class="card contact-form-area">
+            <h5 class="card-header text-center">Contact us</h5>
+            <div class="card-body">
+                <div>
+                    <input type="text" id="materialContactFormName" class="form-control field-padding" placeholder="Name">
+                </div>
+                <div>
+                    <input type="email" id="materialContactFormEmail" class="form-control field-padding" placeholder="Email">
+                </div>
+                <div>
+                    <textarea id="materialContactFormMessage" class="form-control field-padding" rows="5" placeholder="Message"></textarea>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="tick-box">
+                    <label class="form-check-label" for="tick-box">      Sign Up For Future Tour Dates & New Music</label>
+                </div>
+                <button class="btn btn-rounded btn-block contact-form-button col-6 mx-auto" type="submit">Send</button>
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>
+    </article>
+{% endblock %}

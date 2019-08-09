@@ -1,5 +1,4 @@
 import os
-import config
 from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId 
@@ -15,7 +14,13 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def meal_types():
-    return render_template("test_connection.html", meals=mongo.db.meal_type.find())
+    return render_template("test_connection.html", 
+    most_liked=mongo.db.meal_type.find(),
+    favourites=mongo.db.meal_type.find(),
+    meal_type_category=mongo.db.meal_type.find(),
+    quisine_type_category=mongo.db.meal_type.find(),
+    special_diet_type_category=mongo.db.meal_type.find(),
+    difficulty_type_category=mongo.db.meal_type.find())
 
 
 if __name__ == '__main__':
