@@ -263,3 +263,14 @@ hr{/*Horizontal Style Rule */
   
  }
 }
+
+#meal_type, #prep_time, #servings, #calories{
+        margin-right: 40px;
+
+}
+
+.addandremove{
+    margin-top: 0;
+    margin-right: 0px;
+    
+}

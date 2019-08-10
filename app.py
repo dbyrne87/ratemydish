@@ -14,14 +14,17 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def meal_types():
-    return render_template("test_connection.html", 
+    return render_template("home.html", 
     most_liked=mongo.db.meal_type.find(),
     favourites=mongo.db.meal_type.find(),
     meal_type_category=mongo.db.meal_type.find(),
-    quisine_type_category=mongo.db.meal_type.find(),
+    cuisine_type_category=mongo.db.meal_type.find(),
     special_diet_type_category=mongo.db.meal_type.find(),
     difficulty_type_category=mongo.db.meal_type.find())
-
+    
+@app.route('/add_recipe')
+def add_recipe():
+    return render_template("addrecipe.html")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

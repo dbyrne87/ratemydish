@@ -1,0 +1,151 @@
+{% extends 'base.html' %} {% block content %}
+
+<form class="col-lg-6 mx-auto">
+          <div class="card add-a-recipe">
+            <h1 class="card-header text-center">Add Your Recipe</h1>
+              <div class="card-body">
+                <div>
+                  <input type="text" id="meal_title" name="meal_title" class="form-control field-padding" placeholder="Recipe Name">
+                </div>
+                <div>
+                    <input type="text" id="chef_name" name="chef_name" class="form-control field-padding" placeholder="Chef's Name" readonly>
+                </div>
+                <div>
+                    <select class="form-control d-table-row col-lg-5" id="meal_type" name="meal_type">
+                      <option selected disabled>Choose Your Meal Type</option>
+                      <option>1</option>
+                    </select>
+                    
+                    <select class="form-control d-table-row col-lg-5" id="cuisine_type" name="cuisine_type">
+                      <option selected disabled>Choose Your Cuisine Type</option>
+                      <option>1</option>
+                    </select>
+                </div>
+                <br>
+                    <div class="row">
+                    
+                        <span class="input-group-text" id="basic-addon1">Prep Time In Mins</span>
+                    <select class="form-control col-lg-3" id="prep_time" name="prep_time"></select>
+                    
+                    
+                        <span class="input-group-text " id="basic-addon1">Cook Time In Mins</span>
+                    <select class="form-control col-lg-3" id="cook_time" name="cook_time"></select>  
+                    
+                </div>    
+                <br>
+                    <div class="row">
+                    
+                        <span class="input-group-text" id="basic-addon1">Servings</span>
+                    <select class="form-control col-lg-3" id="servings" name="servings"></select>
+                    
+                    
+                       <select class="form-control d-table-row col-lg-5" id="special_diet" name="special_diet">
+                      <option selected disabled>Special Diet</option>
+                      <option>1</option>
+                    </select>
+                    
+                </div>
+                 <br>
+                    <div class="row">
+                    
+                        <input type="text" id="calories" name="calories" class="form-control field-padding col-lg-4" placeholder="Calories Per Serving">
+                    
+                    
+                       <select class="form-control d-table-row col-lg-5" id="difficulty" name="difficulty">
+                      <option selected disabled>Difficulty</option>
+                      <option>1</option>
+                    </select>
+                    
+                </div> 
+               <div id="dynamic_form">
+                  <div class="row">
+                    <input class="form-control field-padding col-lg-7" type="text" name="p_name" id="p_name" placeholder="Enter Product Name">
+                    <a href="javascript:void(0)" class="btn btn-primary addandremove" id="plus">Add More</a>
+                    <a href="javascript:void(0)" class="btn btn-danger addandremove" id="minus">Remove</a>
+                  </div>
+                </div>
+ 
+                <div>
+                  <label class="radio-inline mx-auto"><input type="radio" name="optradio">&nbsp; &nbsp;Christmas Party</label>
+                  <label class="radio-inline mx-auto"><input type="radio" name="optradio">&nbsp; &nbsp;Wedding</label>
+                  <label class="radio-inline mx-auto"><input type="radio" name="optradio">&nbsp; &nbsp;Event</label>
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend mx-auto">
+                    <label class="input-group-text" for="inputGroupSelect01">Date</label>
+                  </div>
+                  <select class="custom-select col-sm-4" id="inputGroupSelect01">
+                    <option selected>Day</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                    <option>13</option>
+                    <option>14</option>
+                    <option>15</option>
+                    <option>16</option>
+                    <option>17</option>
+                    <option>18</option>
+                    <option>19</option>
+                    <option>20</option>
+                    <option>21</option>
+                    <option>22</option>
+                    <option>23</option>
+                    <option>24</option>
+                    <option>25</option>
+                    <option>26</option>
+                    <option>27</option>
+                    <option>28</option>
+                    <option>29</option>
+                    <option>30</option>
+                    <option>31</option>
+                  </select>
+                  
+                  <select class="custom-select col-sm-4" id="inputGroupSelect02">
+                    <option selected>Month</option>
+                    <option>Jan</option>
+                    <option>Feb</option>
+                    <option>Mar</option>
+                    <option>Apr</option>
+                    <option>May</option>
+                    <option>Jun</option>
+                    <option>Jul</option>
+                    <option>Aug</option>
+                    <option>Sep</option>
+                    <option>Oct</option>
+                    <option>Nov</option>
+                    <option>Dec</option>
+                  </select>
+                  
+                  <select class="custom-select col-sm-4" id="inputGroupSelect03">
+                    <option selected>Year</option>
+                    <option>2019</option>
+                    <option>2020</option>
+                    <option>2021</option>
+                    <option>2022</option>
+                  </select>
+                </div>
+                <div>
+                    <input type="text" id="materialContactFormVenue" class="form-control field-padding" placeholder="Venue">
+                </div>
+                <div>
+                    <textarea id="materialContactFormComments" class="form-control field-padding" rows="5" placeholder="Comments"></textarea>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="materialContactFormCopy">
+                    <label class="form-check-label" for="materialContactFormCopy">      Sign Up For Future Tour Dates & New Music</label>
+                </div>
+                <button class="btn btn-rounded btn-block contact-form-button col-6 mx-auto" type="submit">Send</button>
+              </div>
+          </div>
+        </form>
+
+{% endblock %}
