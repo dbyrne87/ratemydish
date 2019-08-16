@@ -1,0 +1,100 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Edit Recipe</h1>
+<form class="col-lg-6 mx-auto" action="{{url_for('insert_recipe')}}" method="POST">
+          <div class="card add-a-recipe">
+            <h1 class="card-header text-center">Edit Your Recipe</h1>
+              <div class="card-body">
+                <div>
+                  <input type="text" id="meal_title" name="meal_title" class="form-control field-padding" placeholder="Recipe Name" value="{{task.meal_title}}">
+                </div>
+                <div>
+                    <input type="text" id="chef_name" name="chef_name" class="form-control field-padding" placeholder="Chef's Name" value="{{task.chef_name}}" readonly>
+                </div>
+                <div>
+                    <select class="form-control d-table-row col-lg-5" id="meal_type" name="meal_type">
+                      <option selected disabled>Choose Your Meal Type</option>
+                      <option>1</option>
+                    </select>
+                    
+                    <select class="form-control d-table-row col-lg-5" id="cuisine_type" name="cuisine_type">
+                      <option selected disabled>Choose Your Cuisine Type</option>
+                      <option>1</option>
+                    </select>
+                </div>
+                <br>
+                    <div class="row">
+                    
+                        <span class="input-group-text" id="basic-addon1">Prep Time In Mins</span>
+                    <select class="form-control col-lg-3" id="prep_time" name="prep_time"></select>
+                    
+                    
+                        <span class="input-group-text " id="basic-addon1">Cook Time In Mins</span>
+                    <select class="form-control col-lg-3" id="cook_time" name="cook_time"></select>  
+                    
+                </div>    
+                <br>
+                    <div class="row">
+                    
+                        <span class="input-group-text" id="basic-addon1">Servings</span>
+                    <select class="form-control col-lg-3" id="servings" name="servings"></select>
+                    
+                    
+                       <select class="form-control d-table-row col-lg-5" id="special_diet" name="special_diet">
+                      <option selected disabled>Special Diet</option>
+                      <option type="number">1</option>
+                    </select>
+                    
+                </div>
+                 <br>
+                    <div class="row">
+                    
+                        <input type="number" id="calories" name="calories" class="form-control field-padding col-lg-4" placeholder="Calories Per Serving">
+                    
+                    
+                       <select class="form-control d-table-row col-lg-5" id="difficulty" name="difficulty">
+                      <option selected disabled>Difficulty</option>
+                      <option>1</option>
+                    </select>
+                    
+                </div> 
+                <div>
+                  <input type="text" id="image_url" name="image_url" class="form-control field-padding" placeholder="Image Url">
+                </div>
+               <!-- field to clone -->
+                <div id="entry1" class="clonedInput_1">
+                  <!-- Text input-->
+                  
+                    <label class="label_instructions" for="input_instructions">Instructions</label>
+                    <input id="email_address" name="email_address" type="text" class="input_instructions">
+                  
+                </div>
+                
+                <!-- add/remove buttons -->
+                <button type="button" id="btnAdd_1" name="btnAdd">Add email</button>
+                <button type="button" id="btnDel_1" name="btnDel">Remove email</span></button>
+                
+                <!-- field to clone -->
+                <div id="phone1" class="clonedInput_2">
+                  <!-- Text input-->
+                  
+                    <label class="label_phone" for="phone_number">Phone:</label>
+                    <input id="phone_number" name="phone_number" type="tel" class="input_phone">
+                 
+                </div>
+                
+                <!-- add/remove buttons -->
+                <button type="button" id="btnAdd_2" name="btnAdd_2">Add phone</button>
+                <button type="button" id="btnDel_2" name="btnDel_2">Remove phone</button>
+                
+                <div>
+                    <input type="text" id="likes" name="likes" class="form-control field-padding" placeholder="Likes"hidden readonly>
+                </div>
+                <div>
+                    <input type="text" id="dislikes" name="dislikes" class="form-control field-padding" placeholder="Dislikes"hidden readonly>
+                </div>
+                
+<button type="submit"></button>
+
+        </form>
+
+{% endblock %}

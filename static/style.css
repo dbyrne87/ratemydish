@@ -1,4 +1,4 @@
-/* General CSS & Multiple CSS Classes*/
+/* base.html CSS*/
 body {
   text-align: center;
   color: #FDFDFF;
@@ -30,6 +30,80 @@ h1, h3{
     color:#FDFDFF;
     padding-top: 35px;
 }
+
+.speech-bubble {
+  position: fixed;
+  bottom: 2em;
+  right: 0;
+  background-color: #2ECC71;
+  border-radius: .4em;
+  box-shadow: -5px -5px 5px grey;
+  width: 150px;
+  height:78px;
+  padding-top:18px;
+  padding-left:0px;
+  z-index:1000;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 24px solid transparent;
+	border-top-color: #2ECC71;
+	border-bottom: 0;
+	border-right: 0;
+	margin-left: -12px;
+	margin-bottom: -24px;
+}
+
+.username{
+  padding:0;
+}
+
+
+
+/* Register/Login Page CSS*/
+.video-wrap {
+  clip: rect(0, auto, auto, 0);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#video {
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  will-change: transform;
+  z-index: -1000;
+}
+video { 
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  transform: translateX(-50%) translateY(-50%);
+  background: url('') no-repeat;
+  background-size: cover;
+  transition: 1s opacity;
+}
+
 
 .jumbotron-fluid {
 background-image: url("/static/media/jumbotron image.jpg");
@@ -273,4 +347,17 @@ hr{/*Horizontal Style Rule */
     margin-top: 0;
     margin-right: 0px;
     
+}
+
+#recipe-page-img{
+  max-width:100px;
+  max-height:auto;
+  margin-left:20px;
+  margin-top:20px;
+  
+}
+
+p{
+  margin-bottom:0px;
+  padding-left:20px;
 }

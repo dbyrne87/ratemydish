@@ -22,29 +22,40 @@
 <body class="container-fluid">
     <nav class="navbar navbar-light navbar-expand-md navbar-dark bg-gradient-1 fixed-top">
         <div class="container dropdown-padding">
-            <a class="navbar-brand" href="index.html"><img id="logo" src="/static/media/icons8-food-50.png" alt="RateMyDish Logo"> <b>R</b>ate<b>M</b>y<b>D</b>ish</a>
+            <a class="navbar-brand" href="/"><img id="logo" src="/static/media/icons8-food-50.png" alt="RateMyDish Logo"> <b>R</b>ate<b>M</b>y<b>D</b>ish</a>
             <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbar-content">
                 <ul class="navbar-nav ml-auto">
+                    {% if username is not none %}
                     <li class="nav-item">
-                        <a class="nav-link active" href="/our-band.html">Login/Register</a>
+                        <a class="nav-link active" href="/">Login/Register</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Add Recipe</a>
+                        <a class="nav-link" href="{{ url_for('add_recipe') }}">Add Recipe</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/events.html">Contact Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/book-now.html">Log Out</a>
+                        <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+    <div class="speech-bubble">
+        <div>
+            {% if username is none %}
+                <p class="text-center font-weight-bold username">Hello! <br>{{session['username']}}</p>
+            {% else %}
+                <p class="text-center font-weight-bold username">Hello! <br> Guest User</p>
+            {% endif %}    
+        </div>
+    </div>    
 {% block content %} {% endblock %}
   <footer class="container-fluid footer-background">
       <ul class="footer-icons row">
@@ -67,39 +78,9 @@
  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script type="text/javascript"src="/static/jquery.czMore-latest.js"></script>
+  <script type="text/javascript"src="/static/clone-form-td.js"></script>
 
  
- <script>
- for(var i=1; i<=120; i++){
-   var select = document.getElementById("prep_time");
-    var option = document.createElement("OPTION");
-	    select.options.add(option);
-	    option.text = i;
-	    option.value = i;
-}
-  for(var i=5; i<=300; i+= 5){
-   var select = document.getElementById("cook_time");
-    var option = document.createElement("OPTION");
-	    select.options.add(option);
-	    option.text = i;
-	    option.value = i;
-}
-  for(var i=1; i<=10; i+= 1){
-   var select = document.getElementById("servings");
-    var option = document.createElement("OPTION");
-	    select.options.add(option);
-	    option.text = i;
-	    option.value = i;
-}
-
-</script>
-
-<script type="text/javascript">
-$(".czContainer").czMore();
-$(".czContainertwo").czMoretwo();
-
-    </script>
 
 
 </body>

@@ -1,8 +1,15 @@
 {% extends 'base.html' %} {% block content %}
-
-<form class="col-lg-6 mx-auto">
+<h1>Add Recipe</h1>
+<form class="col-lg-6 mx-auto" action="{{url_for('insert_recipe')}}" method="POST">
           <div class="card add-a-recipe">
             <h1 class="card-header text-center">Add Your Recipe</h1>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <h1>{{ message }}</h1>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}    
               <div class="card-body">
                 <div>
                   <input type="text" id="meal_title" name="meal_title" class="form-control field-padding" placeholder="Recipe Name">
@@ -41,14 +48,14 @@
                     
                        <select class="form-control d-table-row col-lg-5" id="special_diet" name="special_diet">
                       <option selected disabled>Special Diet</option>
-                      <option>1</option>
+                      <option type="number">1</option>
                     </select>
                     
                 </div>
                  <br>
                     <div class="row">
                     
-                        <input type="text" id="calories" name="calories" class="form-control field-padding col-lg-4" placeholder="Calories Per Serving">
+                        <input type="number" id="calories" name="calories" class="form-control field-padding col-lg-4" placeholder="Calories Per Serving">
                     
                     
                        <select class="form-control d-table-row col-lg-5" id="difficulty" name="difficulty">
@@ -57,102 +64,44 @@
                     </select>
                     
                 </div> 
-               <div class="czContainer">
-                  <div id="first">
-                    <div class="recordset">
-                      <input type="text" id="instructions" name="instructions" class="form-control field-padding" placeholder="instructions">
-                    </div>
-                  </div>
-                </div>  
-                <div class="czContainertwo">  
-                  <div id="second">
-                    <div class="recordsettwo">
-                      <input type="text" id="tools" name="tools" class="form-control field-padding" placeholder="tools">
-                    </div>
-                  </div>
-                </div>
-                </div>
                 <div>
-                  <label class="radio-inline mx-auto"><input type="radio" name="optradio">&nbsp; &nbsp;Christmas Party</label>
-                  <label class="radio-inline mx-auto"><input type="radio" name="optradio">&nbsp; &nbsp;Wedding</label>
-                  <label class="radio-inline mx-auto"><input type="radio" name="optradio">&nbsp; &nbsp;Event</label>
+                  <input type="text" id="image_url" name="image_url" class="form-control field-padding" placeholder="Image Url">
                 </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend mx-auto">
-                    <label class="input-group-text" for="inputGroupSelect01">Date</label>
-                  </div>
-                  <select class="custom-select col-sm-4" id="inputGroupSelect01">
-                    <option selected>Day</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                    <option>13</option>
-                    <option>14</option>
-                    <option>15</option>
-                    <option>16</option>
-                    <option>17</option>
-                    <option>18</option>
-                    <option>19</option>
-                    <option>20</option>
-                    <option>21</option>
-                    <option>22</option>
-                    <option>23</option>
-                    <option>24</option>
-                    <option>25</option>
-                    <option>26</option>
-                    <option>27</option>
-                    <option>28</option>
-                    <option>29</option>
-                    <option>30</option>
-                    <option>31</option>
-                  </select>
+               <!-- field to clone -->
+                <div id="entry1" class="clonedInput_1">
+                  <!-- Text input-->
                   
-                  <select class="custom-select col-sm-4" id="inputGroupSelect02">
-                    <option selected>Month</option>
-                    <option>Jan</option>
-                    <option>Feb</option>
-                    <option>Mar</option>
-                    <option>Apr</option>
-                    <option>May</option>
-                    <option>Jun</option>
-                    <option>Jul</option>
-                    <option>Aug</option>
-                    <option>Sep</option>
-                    <option>Oct</option>
-                    <option>Nov</option>
-                    <option>Dec</option>
-                  </select>
+                    <label class="label_instructions" for="input_instructions">Instructions</label>
+                    <input id="email_address" name="email_address" type="text" class="input_instructions">
                   
-                  <select class="custom-select col-sm-4" id="inputGroupSelect03">
-                    <option selected>Year</option>
-                    <option>2019</option>
-                    <option>2020</option>
-                    <option>2021</option>
-                    <option>2022</option>
-                  </select>
+                </div>
+                
+                <!-- add/remove buttons -->
+                <button type="button" id="btnAdd_1" name="btnAdd">Add email</button>
+                <button type="button" id="btnDel_1" name="btnDel">Remove email</span></button>
+                
+                <!-- field to clone -->
+                <div id="phone1" class="clonedInput_2">
+                  <!-- Text input-->
+                  
+                    <label class="label_phone" for="phone_number">Phone:</label>
+                    <input id="phone_number" name="phone_number" type="tel" class="input_phone">
+                 
+                </div>
+                
+                <!-- add/remove buttons -->
+                <button type="button" id="btnAdd_2" name="btnAdd_2">Add phone</button>
+                <button type="button" id="btnDel_2" name="btnDel_2">Remove phone</button>
+                
+                <div>
+                    <input type="text" id="likes" name="likes" class="form-control field-padding" placeholder="Likes"hidden readonly>
                 </div>
                 <div>
-                    <input type="text" id="materialContactFormVenue" class="form-control field-padding" placeholder="Venue">
+                    <input type="text" id="dislikes" name="dislikes" class="form-control field-padding" placeholder="Dislikes"hidden readonly>
                 </div>
-                <div>
-                    <textarea id="materialContactFormComments" class="form-control field-padding" rows="5" placeholder="Comments"></textarea>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="materialContactFormCopy">
-                    <label class="form-check-label" for="materialContactFormCopy">      Sign Up For Future Tour Dates & New Music</label>
-                </div>
-                <button class="btn btn-rounded btn-block contact-form-button col-6 mx-auto" type="submit">Send</button>
-              </div>
-          </div>
+
+<button type="submit"></button>
+
         </form>
 
 {% endblock %}

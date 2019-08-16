@@ -28,7 +28,7 @@
                         </div>
                         <div class="modal-body text-center">
                             
-                                                       {% for meal_type in meal_type_category %}
+                                                       {% for meal_type in all_categories %}
                                                        <p class="type-list"><a class="black-tag"href=#>{{meal_type.meal_type}}</a></p>
                                                        <hr>
                                                        {%endfor%} 
@@ -110,11 +110,10 @@
             <div class="card-body">
                 <p class="card-text">{{meal_type.chef_name}}<br>{{meal_type.prep_time}}<br>{{meal_type.cook_time}}<br>{{meal_type.servings}}</p>
             </div>
-            <a href="/recipe.html">
+
                 <div class="card-footer">
-                    <p class="clickable-container">Go To Recipe</p>
+                    <button type="submit">Try Me</button>
                 </div>
-            </a>
         </div>
     </div>
 {% endfor %}
