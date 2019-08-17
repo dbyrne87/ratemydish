@@ -2,20 +2,25 @@
 
     <header>
         <div class="jumbotron-fluid">
-            <h3>Search</h3>
-            <form>
+            <h3 id="search-text">Search</h3>
+            <br>
                 <div class="form-group col-6 mx-auto">
-                    <input type="text" class="form-control" placeholder='"Lasagne","Cheese Pizza" etc.'>
-                    <a class="btn btn-primary btn-lg" href="#" role="button">Search</a>
-                </div>
-                <hr>
-                <h3>Or<br>Browse By Category</h3>
-                <button type="button" class="btn btn-primary col-lg-2" data-toggle="modal" data-target="#meal-type-category">Meal Type</button>
-                <button type="button" class="btn btn-primary col-lg-2" data-toggle="modal" data-target="#quisine-type-category">Cuisine Origin</button>
-                <button type="button" class="btn btn-primary col-lg-2" data-toggle="modal" data-target="#special-diet-type-category">Special Diet</button>
-                <button type="button" class="btn btn-primary col-lg-2" data-toggle="modal" data-target="#difficulty-type-category">Difficulty</button>
+                    <form method="POST" action="{{ url_for('search') }}">
+                        <input type="text" class="form-control" id="search" name="search" placeholder='"Lasagne","Cheese Pizza" etc.'>
+                        <br>
+                        <button type="submit" class="btn btn-outline-success col-lg-4">Search</button>
+                    </form>
+                 </div>   
+                <hr class="col-lg-8">
+                <br>
+                <form>
+                    <h3>Or<br>Browse By Category</h3>
+                    <button type="button" class="btn btn-outline-success col-lg-2 category-buttons" data-toggle="modal" data-target="#meal-type-category">Meal Type</button>
+                    <button type="button" class="btn btn-outline-success col-lg-2 category-buttons" data-toggle="modal" data-target="#quisine-type-category">Cuisine Origin</button>
+                    <button type="button" class="btn btn-outline-success col-lg-2 category-buttons" data-toggle="modal" data-target="#special-diet-type-category">Special Diet</button>
+                    <button type="button" class="btn btn-outline-success col-lg-2 category-buttons" data-toggle="modal" data-target="#difficulty-type-category">Difficulty</button>
 
-            </form>
+                </form>
             <!-- Modal -->
             <div class="modal fade" id="meal-type-category" tabindex="-1" role="dialog" aria-labelledby="meal-type-category" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">

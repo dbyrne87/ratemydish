@@ -32,22 +32,25 @@
                     {% if username is not none %}
                     <li class="nav-item">
                         <a class="nav-link active" href="/">Login/Register</a>
+                    </li>    
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
+                    </li>     
+                    {% endif %}    
                     </li>
-                    {% endif %}
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('add_recipe') }}">Add Recipe</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/events.html">Contact Us</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
-                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="speech-bubble">
+    <div class="speech-bubble d-none d-md-block">
         <div>
             {% if username is none %}
                 <p class="text-center font-weight-bold username">Hello! <br>{{session['username']}}</p>
@@ -57,29 +60,55 @@
         </div>
     </div>    
 {% block content %} {% endblock %}
-  <footer class="container-fluid footer-background">
-      <ul class="footer-icons row">
-        <li class="social-icons col-sm-6 col-md-3 col-lg-3 text-center">
-          <a class="social-icon d-none d-md-block" href="https://www.facebook.com/TheJonesMusic/" target="_blank"><i class="fab fa-facebook-square"></i></a>
-        </li>
-        <li class="social-icons col-sm-6 col-md-3 col-lg-3 text-center">
-          <a class="social-icon d-none d-md-block" href="https://www.snapchat.com/l/en-gb/" target="_blank"><i class="fab fa-snapchat-square"></i></a>
-        </li>
-        <li class="social-icons col-sm-6 col-md-3 col-lg-3 text-center">
-          <a class="social-icon d-none d-md-block" href="https://www.youtube.com/channel/UCQ13In3Mv5xRHKAYHWxePRA" target="_blank"><i class="fab fa-youtube-square"></i></a>
-        </li>
-        <li class="social-icons col-sm-6 col-md-3 col-lg-3 text-center">
-          <a class="social-icon d-none d-md-block" href="https://twitter.com/?lang=en" target="_blank"><i class="fab fa-twitter-square"></i></a>
-        </li>
-      </ul>
-      <a class="mx-auto" href="https://icons8.com/icon/52978/guitar">Guitar icon by Icons8</a>
+  <footer class="row" id="footer-background">
+        <div class="col-sm-6 col-md-3 col-lg-3">
+          <a class="social-icon d-none d-md-block" href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-square fa-2x"></i></a>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3">
+          <a class="social-icon d-none d-md-block" href="https://www.snapchat.com/l/en-gb/" target="_blank"><i class="fab fa-snapchat-square fa-2x"></i></a>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3">
+          <a class="social-icon d-none d-md-block" href="https://www.youtube.com/" target="_blank"><i class="fab fa-youtube-square fa-2x"></i></a>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3">
+          <a class="social-icon d-none d-md-block" href="https://twitter.com/?lang=en" target="_blank"><i class="fab fa-twitter-square fa-2x"></i></a>
+        </div>
+      <a href="https://icons8.com/icon/2470/food">Food icon by Icons8</a>
   </footer>
 
  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script type="text/javascript"src="/static/clone-form-td.js"></script>
+  <script type="text/javascript"src="/static/form.js"></script>
+<script type="text/javascript">
+    $(function () {
+ for(var i=1; i<=120; i++){
+   var select = document.getElementById("prep_time");
+    var option = document.createElement("OPTION");
+	    select.options.add(option);
+	    option.text = i;
+	    option.value = i;
+}
+  for(var i=5; i<=300; i+= 5){
+   var select = document.getElementById("cook_time");
+    var option = document.createElement("OPTION");
+	    select.options.add(option);
+	    option.text = i;
+	    option.value = i;
+}
+  for(var i=1; i<=10; i+= 1){
+   var select = document.getElementById("servings");
+    var option = document.createElement("OPTION");
+	    select.options.add(option);
+	    option.text = i;
+	    option.value = i;
+}
 
+});
+    
+    
+</script>
  
 
 

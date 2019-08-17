@@ -1,7 +1,7 @@
 import os
 import bcrypt
 from flask import Flask, render_template, redirect, request, url_for, session, flash
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId 
 
 app = Flask(__name__)
@@ -34,7 +34,7 @@ def register():
 
     if existing_user is None:
        hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-       users.insert({'name' : request.form['username'], 'password' : hashpass})
+       users.insert({'name' : request.form['username'], 'password' : hashpass, 'email' : request.form['email']})
        session['username'] = request.form['username']
        return render_template("home.html", 
        most_liked=mongo.db.meal_type.find(),
@@ -109,7 +109,14 @@ def edit_recipe(meal_type):
     all_categories =  mongo.db.meal_type.find()
     return render_template('editrecipe.html', task=the_task,
                            categories=all_categories,
-    username=mongo.db.users.find_one({"username": session['username']}))                       
+    username=mongo.db.users.find_one({"username": session['username']}))  
+    
+@app.route('/search', methods=['POST', 'GET'])
+def search():
+    search = request.form['search']
+    title_results =  mongo.db.meal_type.find( { '$or': [ {'meal_title': { '$regex': search,  '$options': 'i' }}, 
+                                              {'email_address': { '$regex': search, '$options': 'i' }} ] })
+    return render_template('searchtest.html', task=title_results)
     
 @app.route('/add_recipe')
 def add_recipe():
@@ -124,7 +131,7 @@ def add_recipe():
 @app.route('/insert_recipe', methods=['POST'])
 def insert_recipe():
     meals=mongo.db.meal_type
-    meals.insert_one(request.form.to_dict())
+    meals.insert_one.lower(request.form.to_dict())
     return render_template('addrecipe.html',
            flash=flash('Your Recipe Has Been Added!'),
            username=mongo.db.users.find_one({"username": session['username']}))
