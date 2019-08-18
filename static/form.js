@@ -1,7 +1,7 @@
 $(function () {
- for(var i=1; i<=120; i++){
-   var select = document.getElementById("prep_time");
-    var option = document.createElement("OPTION");
+    for(var i=1; i<=120; i++){
+    var select = document.getElementById("prep_time");
+        var option = document.createElement("OPTION");
 	    select.options.add(option);
 	    option.text = i;
 	    option.value = i;

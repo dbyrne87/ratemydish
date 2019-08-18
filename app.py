@@ -1,5 +1,6 @@
 import os
 import bcrypt
+import numpy as np 
 from flask import Flask, render_template, redirect, request, url_for, session, flash
 from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId 
@@ -14,15 +15,17 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def meal_types():
+    meal_types_category = mongo.db.meal_type.distinct('meal_type')
     if 'username' in session:
         return render_template("home.html", 
         most_liked=mongo.db.meal_type.find(),
         favourites=mongo.db.meal_type.find(),
-        meal_type_category=mongo.db.meal_type.find(),
+        meal_type_category= meal_types_category,
         cuisine_type_category=mongo.db.meal_type.find(),
         special_diet_type_category=mongo.db.meal_type.find(),
         difficulty_type_category=mongo.db.meal_type.find(),
         username=mongo.db.users.find_one({"username": session['username']}))
+        
      
     return render_template('register_login.html')
 
@@ -52,6 +55,11 @@ def register():
 def login():
     users = mongo.db.users
     login_user = users.find_one({'name' : request.form['username']})
+    meal_types_category = mongo.db.meal_type.distinct('meal_type')
+    cuisine_type_categories = mongo.db.meal_type.distinct('cuisine_type')
+    special_diet_type_category = mongo.db.meal_type.distinct('special_diet')
+    difficulty_type_category = mongo.db.meal_type.distinct('difficulty')
+    print(difficulty_type_category)
 
     if login_user:
         if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']) == login_user['password']: 
@@ -59,10 +67,10 @@ def login():
             return render_template("home.html", 
             most_liked=mongo.db.meal_type.find(),
             favourites=mongo.db.meal_type.find(),
-            meal_type_category=mongo.db.meal_type.find(),
-            cuisine_type_category=mongo.db.meal_type.find(),
-            special_diet_type_category=mongo.db.meal_type.find(),
-            difficulty_type_category=mongo.db.meal_type.find(),
+            meal_type_category= meal_types_category,
+            cuisine_type_category=cuisine_type_categories,
+            special_diet_type_category=special_diet_type_category,
+            difficulty_type_category=difficulty_type_category,
             username=mongo.db.users.find_one({"username": session['username']}))
 
         return render_template('register_login.html',

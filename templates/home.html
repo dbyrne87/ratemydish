@@ -33,8 +33,8 @@
                         </div>
                         <div class="modal-body text-center">
                             
-                                                       {% for meal_type in all_categories %}
-                                                       <p class="type-list"><a class="black-tag"href=#>{{meal_type.meal_type}}</a></p>
+                                                       {% for meal_type in meal_type_category[0:3] %}
+                                                       <p class="type-list"><a class="black-tag"href=#>{{meal_type[0:20]}}</a></p>
                                                        <hr>
                                                        {%endfor%} 
                                                      
@@ -53,8 +53,8 @@
         </button>
                         </div>
                         <div class="modal-body">
-                            {% for meal_type in cuisine_type_category %}
-                                                       <p class="type-list"><a class="black-tag"href=#>{{meal_type.cuisine_type}}</a></p>
+                            {% for cuisine_type in cuisine_type_category[0:3] %}
+                                                       <p class="type-list"><a class="black-tag"href=#>{{cuisine_type[0:20]}}</a></p>
                                                        <hr>
                             {%endfor%} 
                         </div>
@@ -72,8 +72,8 @@
         </button>
                         </div>
                         <div class="modal-body">
-                            {% for meal_type in special_diet_type_category %}
-                                                       <p class="type-list"><a class="black-tag"href=#>{{meal_type.special_diet}}</a></p>
+                            {% for special_diet in special_diet_type_category[0:3] %}
+                                                       <p class="type-list"><a class="black-tag"href=#>{{special_diet[0:20]}}</a></p>
                                                        <hr>
                                                        {%endfor%} 
                         </div>
@@ -91,8 +91,8 @@
         </button>
                         </div>
                         <div class="modal-body">
-                            {% for meal_type in difficulty_type_category %}
-                                                       <p class="type-list"><a class="black-tag"href=#>{{meal_type.difficulty}}</a></p>
+                            {% for difficulty in difficulty_type_category[0:3] %}
+                                                       <p class="type-list"><a class="black-tag"href=#>{{difficulty[0:20]}}</a></p>
                                                        <hr>
                                                        {%endfor%} 
                         </div>
