@@ -16,14 +16,17 @@ mongo = PyMongo(app)
 @app.route('/')
 def meal_types():
     meal_types_category = mongo.db.meal_type.distinct('meal_type')
+    cuisine_type_categories = mongo.db.meal_type.distinct('cuisine_type')
+    special_diet_type_category = mongo.db.meal_type.distinct('special_diet')
+    difficulty_type_category = mongo.db.meal_type.distinct('difficulty')
     if 'username' in session:
         return render_template("home.html", 
         most_liked=mongo.db.meal_type.find(),
         favourites=mongo.db.meal_type.find(),
         meal_type_category= meal_types_category,
-        cuisine_type_category=mongo.db.meal_type.find(),
-        special_diet_type_category=mongo.db.meal_type.find(),
-        difficulty_type_category=mongo.db.meal_type.find(),
+        cuisine_type_category=cuisine_type_categories,
+        special_diet_type_category=special_diet_type_category,
+        difficulty_type_category=difficulty_type_category,
         username=mongo.db.users.find_one({"username": session['username']}))
         
      
@@ -59,7 +62,6 @@ def login():
     cuisine_type_categories = mongo.db.meal_type.distinct('cuisine_type')
     special_diet_type_category = mongo.db.meal_type.distinct('special_diet')
     difficulty_type_category = mongo.db.meal_type.distinct('difficulty')
-    print(difficulty_type_category)
 
     if login_user:
         if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']) == login_user['password']: 
@@ -87,24 +89,38 @@ def login():
 
 @app.route('/guest_login')
 def guest_login():
+    meal_types_category = mongo.db.meal_type.distinct('meal_type')
+    cuisine_type_categories = mongo.db.meal_type.distinct('cuisine_type')
+    special_diet_type_category = mongo.db.meal_type.distinct('special_diet')
+    difficulty_type_category = mongo.db.meal_type.distinct('difficulty')
+    
     if 'username' in session:
         return render_template("home.html", 
         most_liked=mongo.db.meal_type.find(),
         favourites=mongo.db.meal_type.find(),
-        meal_type_category=mongo.db.meal_type.find(),
-        cuisine_type_category=mongo.db.meal_type.find(),
-        special_diet_type_category=mongo.db.meal_type.find(),
-        difficulty_type_category=mongo.db.meal_type.find(),
+        meal_type_category=meal_types_category,
+        cuisine_type_category=cuisine_type_categories,
+        special_diet_type_category= special_diet_type_category,
+        difficulty_type_category=difficulty_type_category,
         username=mongo.db.users.find_one({"username": session['username']}))
     
     return render_template("home.html", 
         most_liked=mongo.db.meal_type.find(),
         favourites=mongo.db.meal_type.find(),
-        meal_type_category=mongo.db.meal_type.find(),
-        cuisine_type_category=mongo.db.meal_type.find(),
-        special_diet_type_category=mongo.db.meal_type.find(),
-        difficulty_type_category=mongo.db.meal_type.find())    
+        meal_type_category=meal_types_category,
+        cuisine_type_category=cuisine_type_categories,
+        special_diet_type_category= special_diet_type_category,
+        difficulty_type_category=difficulty_type_category)    
 
+@app.route('/contact_us', methods=['POST', 'GET'])
+def contact_us():
+    return render_template('contact_us.html')
+
+@app.route('/view_recipe/<search>', methods=['POST', 'GET'])
+def view_recipe(search):
+    title_results =  mongo.db.meal_type.find_one( {'_id': ObjectId(request.form['get_recipe']) })
+    return render_template('recipepage.html', task=title_results,
+    username=mongo.db.users.find_one({"username": session['username']})) 
 
 @app.route('/edit_test')
 def edit_test():
@@ -149,6 +165,21 @@ def logout():
     session.clear()
     return render_template('register_login.html',
         flash=flash('You have been Signed Out!'))
+        
+@app.route('/category_results', methods=['POST', 'GET'])
+def category_results():
+    if request.form['type_category_button'] in ('Breakfast', 'Lunch', 'Dinner', 'Snack'):
+        category_results=mongo.db.meal_type.find({'meal_type': request.form['type_category_button']})
+        return render_template('category_results.html', tasks=category_results)
+    elif request.form['type_category_button'] in ('American', 'Chinese', 'French', 'Greek', 'Indian', 'Irish', 'Italian', 'Mexican', 'Thai', 'Turkish', 'Other'):
+         category_results=mongo.db.meal_type.find({'cuisine_type': request.form['type_category_button']})
+         return render_template('category_results.html', tasks=category_results)
+    elif request.form['type_category_button'] in ('Vegetarian', 'Vegan', 'Weight Watchers', 'Gluten-free', 'Ketogenic', 'High-protein', 'Low Fat', 'Low-Carb', 'Other Diet'):
+         category_results=mongo.db.meal_type.find({'special_diet': request.form['type_category_button']})
+         return render_template('category_results.html', tasks=category_results)
+    elif request.form['type_category_button'] in ('Easy', 'Medium', 'Hard'):
+         category_results=mongo.db.meal_type.find({'difficulty': request.form['type_category_button']})
+         return render_template('category_results.html', tasks=category_results)     
        
 
 if __name__ == '__main__':

@@ -20,6 +20,18 @@ a, a:hover {
   
 }
 
+.card-header{
+  text-transform: capitalize;
+}
+
+.card-text{
+  color:black;
+}
+
+.card-footer{
+  width:100%;
+  display:block;
+}
 
 @keyframes link-backgrounds {
   from {color: #FDFDFF;}

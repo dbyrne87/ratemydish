@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block content %}
+<div class="contact-form-area">
+            <h5 class="card-header text-center">Contact us</h5>
+            <div class="card-body">
+                <div>
+                    <input type="text" id="ContactFormName" class="form-control field-padding" placeholder="Name">
+                </div>
+                <div>
+                    <input type="email" id="ContactFormEmail" class="form-control field-padding" placeholder="Email">
+                </div>
+                <div>
+                    <textarea id="ContactFormMessage" class="form-control field-padding" rows="5" placeholder="Message"></textarea>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="tick-box">
+                    <label class="form-check-label" for="tick-box">      Sign Up For Future Tour Dates & New Music</label>
+                </div>
+                <button class="btn btn-rounded btn-block contact-form-button col-6 mx-auto" type="submit">Send</button>
+            </div>
+        </div>
+{% endblock %}        
