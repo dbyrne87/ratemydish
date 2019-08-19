@@ -1,17 +1,46 @@
+#import modules and external file#
 import os
 import bcrypt
-import numpy as np 
 from flask import Flask, render_template, redirect, request, url_for, session, flash
 from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId 
+from flask_mail import Mail, Message
+from app_variables import *
 
 app = Flask(__name__)
-app.config["MONGO_DBNAME"] = 'RateMyDish'
-app.config["MONGO_URI"] = 'mongodb+srv://root:MyRootDataBase@myfirstcluster-ur0qm.mongodb.net/RateMyDish?retryWrites=true&w=majority'
+app.config["MONGO_DBNAME"] = MONGO_DBNAME
+app.config["MONGO_URI"] = MONGO_URI
 
 
+app.config['MAIL_SERVER'] = MAIL_SERVER
+app.config['MAIL_PORT'] = MAIL_PORT
+app.config['MAIL_USE_TLS'] = MAIL_USE_TLS
+app.config['MAIL_USE_SSL'] = MAIL_USE_SSL
+app.config['MAIL_USERNAME'] = MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
+app.config['MAIL_DEFAULT_SENDER'] = MAIL_DEFAULT_SENDER
+app.config['MAIL_MAX_EMAILS'] = MAIL_MAX_EMAILS
+app.config['MAIL_SUPRESS_SEND'] = MAIL_SUPRESS_SEND
+app.config['MAIL_ASCII_ATTACHMENTS'] = MAIL_ASCII_ATTACHMENTS
 
+mail = Mail(app)
 mongo = PyMongo(app)
+
+@app.route('/contact_us', methods=['POST', 'GET'])
+def contact_us():
+    return render_template('contact_us.html')
+    
+@app.route('/send_email', methods=['POST', 'GET'])
+def send_email():
+    email = Message('You Have Mail', recipients=[MAIL_RECIPIENT])
+    msg_name = request.form['name']
+    msg_email = request.form['email_address']
+    msg_message = request.form['message']
+    email.html = 'From:'+ msg_name + '<br> Email:'+ msg_email + '<br> Message: <br>' + msg_message
+    
+    mail.send(email)
+    return render_template('contact_us.html',
+    flash=flash('Your Email Has been Sent!'))
 
 @app.route('/')
 def meal_types():
@@ -112,9 +141,6 @@ def guest_login():
         special_diet_type_category= special_diet_type_category,
         difficulty_type_category=difficulty_type_category)    
 
-@app.route('/contact_us', methods=['POST', 'GET'])
-def contact_us():
-    return render_template('contact_us.html')
 
 @app.route('/view_recipe/<search>', methods=['POST', 'GET'])
 def view_recipe(search):
@@ -146,6 +172,8 @@ def search():
 def add_recipe():
     if 'username' in session:
         return render_template("addrecipe.html",
+        meal_type=mongo.db.meal_types.find(),
+        cuisine_types=mongo.db.cuisine_types.find(),
         username=mongo.db.users.find_one({"username": session['username']}))
         
     return render_template('register_login.html',
@@ -155,7 +183,7 @@ def add_recipe():
 @app.route('/insert_recipe', methods=['POST'])
 def insert_recipe():
     meals=mongo.db.meal_type
-    meals.insert_one.lower(request.form.to_dict())
+    meals.insert_one(request.form.to_dict())
     return render_template('addrecipe.html',
            flash=flash('Your Recipe Has Been Added!'),
            username=mongo.db.users.find_one({"username": session['username']}))
@@ -183,7 +211,7 @@ def category_results():
        
 
 if __name__ == '__main__':
-    app.secret_key = 'mysecret'
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.secret_key = SECRET_KEY
+    app.run(host=HOST, port=PORT, debug=DEBUG)
     
     
