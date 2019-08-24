@@ -276,14 +276,23 @@ video {
   margin-bottom: 16px;
 }
 
+#recipe_submit-button{
+  margin-top: 30px;
+}
+
 #add_recipe_card {
   margin-top: 75px;
 }
 
 .alert {
-  font-size: 60px;
+  font-size: 30px;
 }
 
+
+/*   search_results.html    */
+#search-footer{
+  padding:0;
+}
 
 /* ########   Media Queries   ######## */
 

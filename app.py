@@ -6,6 +6,7 @@ from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId 
 from flask_mail import Mail, Message
 from app_variables import *
+from collections import OrderedDict
 
 # Configure Flask and Mail Server #
 app = Flask(__name__, static_url_path='/static')
@@ -159,7 +160,7 @@ def edit_test():
     return render_template("editbuttontest.html",
     meal_type_category=mongo.db.meal_type.find())
 
-# Get's the _id of the recipe's edit button, queries the data base for the specific recipe details &
+# Get's the _id of the recipe's edit button, queries the data base for the specific recipe details or
 # renders the editrecipe.html page with the recipe data for updating #
 @app.route('/edit_recipe/<meal_type>')
 def edit_recipe(meal_type):
@@ -169,13 +170,33 @@ def edit_recipe(meal_type):
                            categories=all_categories,
     username=mongo.db.users.find_one({"username": session['username']}))  
 
-# Search the database for matching word/s in the Meal Title, Prep Instructions & Cooking Instruction Values  #    
+# Search the database for matching word/s in the Meal Title, Prep Instructions or Cooking Instruction Values  #    
 @app.route('/search', methods=['POST', 'GET'])
 def search():
     search = request.form['search']
     title_results =  mongo.db.meal_type.find( { '$or': [ {'meal_title': { '$regex': search,  '$options': 'i' }}, 
-                                              {'email_address': { '$regex': search, '$options': 'i' }} ] })
-    return render_template('searchtest.html', task=title_results)
+                                              {'input_ingredients': { '$regex': search, '$options': 'i' }} ,
+                                              {'Field2_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field3_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field4_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field5_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field6_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field7_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field8_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field9_input_ingredients': { '$regex': search,  '$options': 'i' }},
+                                              {'Field10_input_ingredients': { '$regex': search,  '$options': 'i' }}] })
+  
+    #Filters out multiples of the same recipe being returned to the user
+    unique = []
+    for i in title_results:    
+        if not i in unique:  
+            unique.append(i)
+    return render_template('search_results.html', 
+        meal_type_category= meal_types_category,
+        cuisine_type_category= cuisine_type_categories,
+        special_diet_type_category= special_diet_type_category,
+        difficulty_type_category= difficulty_type_category,
+        task=unique)
 
 # If User is Logged In then allow them to add a Recipe #    
 @app.route('/add_recipe')
@@ -196,8 +217,11 @@ def insert_recipe():
     meals=mongo.db.meal_type
     meals.insert_one(request.form.to_dict())
     return render_template('addrecipe.html',
-           flash=flash('Your Recipe Has Been Added!'),
-           username=mongo.db.users.find_one({"username": session['username']}))
+            flash=flash('Your Recipe Has Been Added!'),
+            meal_types= mongo.db.meal_types.find(),
+            cuisine_types= mongo.db.cuisine_types.find(),
+            special_diet= mongo.db.special_diets.find(),
+            username=mongo.db.users.find_one({"username": session['username']}))
 
 # If Logout Button is clicked then it removes the session cookie and brings them to the register page with message #
 @app.route('/logout')
