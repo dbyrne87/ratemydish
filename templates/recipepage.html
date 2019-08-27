@@ -1,6 +1,111 @@
-<div>
-<p>{{task.meal_title}}</p>
-</div>
-<div>
-<p>{{task.chef_name}}</p>
-</div>
+{% extends 'base_forms.html' %} {% block content %}
+<div class="container-fluid">
+    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class=" col-sm-6 alert alert-warning mx-auto" role="alert">
+                          {{ message }}
+                        </div>  
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+    <h3 class="col-8 mx-auto text-center sub-heading text-capitalize" id="recipe-page-title">{{task.meal_title}}</h3>
+    <div class="row col-12">
+        <div class="col-6 mx-auto d-none d-lg-block">
+            <img src="{{task.image_url}}" class="col-6" id="recipe-page-image"></img>
+        </div>    
+            <div class="col-lg-6 d-none d-lg-block">
+                <p class="recipe-page-list-boxes col-8 rounded" id="recipe-page-list-boxes-first"><i class="fas fa-pen"></i> Created By: {{task.chef_name}}</p>
+                <p class="recipe-page-list-boxes col-8 rounded"><i class="fas fa-utensils"></i>   Perfect For: {{task.meal_type}}</p>
+                <p class="recipe-page-list-boxes col-8 rounded"><i class="fas fa-flag-usa"></i>   Cuisine Origin: {{task.cuisine_type}}</p>
+                <p class="recipe-page-list-boxes col-8 rounded"><i class="fas fa-thermometer-three-quarters"></i> Difficulty: {{task.difficulty}}</p>
+                <p class="recipe-page-list-boxes col-8 rounded"><i class="fas fa-bread-slice"></i> Suitable For a {{task.special_diet}} Diet</p>
+            </div>
+           <div class="col-lg-12 mx-auto d-none d-lg-block">
+                <p class="recipe-page-list-boxes col-3 d-inline-block box-margin rounded"><i class="fas fa-stopwatch"></i> Preperation Time: {{task.prep_time}} min.</p>
+                <p class="recipe-page-list-boxes col-3 d-inline-block box-margin rounded"><i class="fas fa-stopwatch"></i> Cooking Time: {{task.cook_time}} min.</p>
+                <p class="recipe-page-list-boxes col-3 d-inline-block box-margin rounded"><i class="fas fa-running"></i> Calories Per Serving: {{task.calories}}</p>
+                <p class="recipe-page-list-boxes col-2 d-inline-block box-margin rounded"><i class="fas fa-pizza-slice"></i> Servings: {{task.servings}}</p>
+            </div>
+    </div>
+    
+    <div class="d-lg-none">
+        <img src="{{task.image_url}}" class="col-6" id="recipe-page-image"></img>
+    </div>    
+    <div class="d-lg-none mx-auto">
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded" id="recipe-page-list-boxes-first">Created By:<br> {{task.chef_name}}</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Perfect For:<br> {{task.meal_type}}</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Cuisine Origin:<br> {{task.cuisine_type}}</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Difficulty: <br> {{task.difficulty}}</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Suitable For a <br>{{task.special_diet}}<br>Diet</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Preperation Time:<br> {{task.prep_time}}<br> min.</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Cooking Time:<br> {{task.cook_time}}<br> min.</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Calories Per Serving:<br> {{task.calories}}</p>
+        <p class="recipe-page-list-boxes col-5 d-inline-block mx-auto rounded">Servings:<br> {{task.servings}}</p>
+    </div>
+    
+  <div class="row col-12">
+    <div class="col-md-6 col-sm-12">
+        <h3 class="col-8 mx-auto text-center sub-heading text-capitalize" id="recipe-page-title">Ingredients & Utensils</h3>
+        <ol class="text-left">
+           <li>{{task.input_ingredients}}</li>
+           <li>{{task.Field2_input_ingredients}}</li> 
+           <li>{{task.Field3_input_ingredients}}</li> 
+           <li>{{task.Field4_input_ingredients}}</li> 
+           <li>{{task.Field5_input_ingredients}}</li> 
+           <li>{{task.Field6_input_ingredients}}</li> 
+           <li>{{task.Field7_input_ingredients}}</li> 
+           <li>{{task.Field8_input_ingredients}}</li> 
+           <li>{{task.Field9_input_ingredients}}</li> 
+           <li>{{task.Field10_input_ingredients}}</li> 
+            
+        </ol>
+    </div>
+    
+    <div class="col-md-6 col-sm-12">
+        <h3 class="col-8 mx-auto text-center sub-heading text-capitalize" id="recipe-page-title">Cooking Instructions</h3>
+        <ol class="text-left">
+           <li>{{task.input_ingredients}}</li>
+           <li>{{task.ID2_input_instructions}}</li> 
+           <li>{{task.ID3_input_instructions}}</li> 
+           <li>{{task.ID4_input_instructions}}</li> 
+           <li>{{task.ID5_input_instructions}}</li> 
+           <li>{{task.ID6_input_instructions}}</li> 
+           <li>{{task.ID7_input_instructions}}</li> 
+           <li>{{task.ID8_input_instructions}}</li> 
+           <li>{{task.ID9_input_instructions}}</li> 
+           <li>{{task.ID10_input_instructions}}</li> 
+            
+        </ol>
+    </div>
+  </div>
+  <div>
+      <h3 class="col-8 mx-auto text-center sub-heading text-capitalize" id="recipe-page-title">Ratings</h3>
+      <div id="ratings-left">
+          <p class="recipe-page-list-boxes col-2 d-inline-block text-center rounded"><i class="fas fa-thumbs-up"></i>   Likes: {{task.likes}}</p>
+          <p class="recipe-page-list-boxes col-2 d-inline-block text-center rounded"><i class="fas fa-thumbs-down"></i>   Dislikes: {{task.dislikes}}</p>
+          <h4 class="col-6 text-capitalize" id="comments-title">Comments</h4>
+          {% for comment in task['comments'][0:5] %}
+          <div class="col-6" id="comment">
+              <p value="No Comments">{{ comment }}</p>   
+          </div>
+      {% endfor %}
+      </div>
+  </div>
+      <h3 class="col-8 mx-auto text-center sub-heading" id="recipe-page-title">Have Your Say</h3>
+      <div class="col-12 have-your-say-content d-inline-block">
+          <form method="POST" id="increase_likes" action="{{ url_for('increase_recipe_likes')}}"></form>
+          <form method="POST" id="increase_dislikes" action="{{ url_for('increase_recipe_dislikes')}}"></form>
+              <button type="submit" form="increase_likes" class="btn btn-outline-success col-3" name="increase_likes_button" value="{{task._id}}"><i class="fas fa-thumbs-up"></i> Like This Recipe</button>
+              <button type="submit" form="increase_dislikes" class="btn btn-outline-success col-3" name="increase_dislikes_button" value="{{task._id}}"><i class="fas fa-thumbs-down"></i> Dislike This Recipe</button>
+        <form method="POST" id="comment-form" action="{{ url_for('add_comment', search=task._id) }}">      
+            <label id="comment_title" for="comment"><i class="fas fa-pencil-alt prefix"></i> Review The Recipe</label>  
+              <textarea id="comment" name="comment" class="md-textarea form-control" form="comment-form" rows="3" required></textarea>
+              <button type="submit" id="add_comment_button" name="add_comment_button" class="btn btn-outline-success col-3" value="{{task._id}}">Submit Your Comment</button>
+        </form>
+        </div>
+        <form method="POST" action="{{url_for('edit_recipe', search=task._id)}}">
+        <button type="submit" id="edit_button" name="edit_button" class="btn btn-outline-alert col-3" value="{{task._id}}">Edit This Recipe</button>
+        </form>
+      </div>
+{% endblock %}

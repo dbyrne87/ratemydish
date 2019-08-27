@@ -100,6 +100,10 @@ p {
 
 
 /* Our Favourites, Most Liked & Recipe List Page */
+.card-img-top{
+  max-height:142px;
+}
+
 .card {
   background-color: #2ecc71;
   box-shadow: 10px 10px 4px rgba(0, 0, 0, .5);
@@ -112,10 +116,6 @@ p {
   color: black;
   padding:16px 5px;
 
-}
-
-.card-header {
-  text-transform: capitalize;
 }
 
 .card-text {
@@ -294,6 +294,69 @@ video {
   padding:0;
 }
 
+
+/*   recipepage.html    */
+#recipe-page-title{
+ font-size:40px; 
+ padding-top:26px;
+}
+
+#recipe-page-image{
+  margin:27px 20px 10px 10px;
+  max-width:50vw;
+  padding:0;
+  box-shadow: 10px 10px 4px rgba(0, 0, 0, .5);
+}
+
+#recipe-page-list-boxes-first{
+  margin-top:27px;
+}
+
+.recipe-page-list-boxes{
+  background-color:#2ecc71;
+  margin:15px 10px 15px 0px;
+  padding: 12px 20px;
+  top: 4%;
+}
+
+ol{
+  color:black;
+  word-wrap: normal
+}
+
+li:empty{
+    display:none;
+}
+
+#ratings-left{
+  text-align:left;
+}
+
+#comments-title{
+  color:black;
+  padding-bottom:20px;
+}
+
+#comment{
+  color:black;
+  border-bottom:3px solid #FED300;
+  margin-bottom:30px;
+  word-wrap: normal;
+}
+
+#comment_title{
+  margin-top:20px;
+}
+
+.have-your-say-content{
+  text-align:left !important;
+}
+
+.md-textarea:focus {
+  border-color: #FED300 !important;
+  box-shadow: inset 0 1px 1px rgba(254, 211, 0, 0.075), 0 0 8px rgba(254, 211, 0, 0.6) !important;
+}
+
 /* ########   Media Queries   ######## */
 
 @media (min-width: 342px) {
@@ -310,6 +373,12 @@ video {
     position: relative;
     width: 100%;
     height: 150vh;
+  }
+  #recipe-page-list-boxes-first{
+    margin-top:17px !important;
+  }
+  .recipe-page-list-boxes{
+  padding:20px 5px;
   }
 }
 
@@ -329,8 +398,26 @@ video {
   }
 } 
 
+@media (max-width:992px) {
+  #recipe-page-image{
+  margin:0;
+  min-width:81vw;
+}
+
+}
+
 @media (max-width:1025px) {
   .category-buttons {
     margin: 10px 0px;
+  }
+   .recipe-page-list-boxes{
+    top:0;
+    margin-bottom:2px;
+   }   
+}
+
+@media (max-width:1125px) {
+  #recipe-page-list-boxes-first{
+    margin-top:5px;
   }
 }

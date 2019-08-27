@@ -3,9 +3,9 @@
         <div class="jumbotron-fluid">
             <h3 id="search-text">Search</h3>
             <br>
-            <div class="form-group col-6 mx-auto">
+            <div class="form-group col-8 mx-auto">
                 <form method="POST" action="{{ url_for('search') }}">
-                    <input type="text" class="form-control" id="search" name="search" placeholder='"Lasagne","Cheese Pizza" or an Ingredient etc.'>
+                    <input type="text" class="form-control " id="search" name="search" placeholder='"Lasagne","Cheese Pizza" or an Ingredient etc.'>
                     <br>
                     <button type="submit" class="btn btn-outline-success col-lg-4"><i class="fas fa-search"></i> Search</button>
                 </form>
@@ -14,10 +14,10 @@
             <br>
             <form>
                 <h3>Browse By Category</h3>
-                <button type="button" class="btn btn-outline-success col-sm-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#meal-type-category"><i class="fas fa-utensils"></i> Meal Type</button>
-                <button type="button" class="btn btn-outline-success col-sm-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#cuisine-type-category"><i class="fas fa-flag-usa"></i> Cuisine Origin</button>
-                <button type="button" class="btn btn-outline-success col-sm-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#special-diet-type-category"><i class="fas fa-bread-slice"></i> Special Diet</button>
-                <button type="button" class="btn btn-outline-success col-sm-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#difficulty-type-category"><i class="fas fa-search"></i> Difficulty</button>
+                <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#meal-type-category"><i class="fas fa-utensils"></i> Meal Type</button>
+                <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#cuisine-type-category"><i class="fas fa-flag-usa"></i> Cuisine Origin</button>
+                <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#special-diet-type-category"><i class="fas fa-bread-slice"></i> Special Diet</button>
+                <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#difficulty-type-category"><i class="fas fa-search"></i> Difficulty</button>
 
             </form>
             <!-- Modal -->
@@ -123,7 +123,7 @@
     <div class="col-lg-3 col-md-6 mb-4">
         <div class="card h-80 text-center text-white bg-gradient-1">
             <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
-            <h4 class="card-header">{{meal_type.meal_title}}</h4>
+            <h4 class="card-header text-capitalize">{{meal_type.meal_title}}</h4>
             <div class="card-body">
                 <p class="card-text"><b>Created By:</b>    {{meal_type.chef_name}}<br><b>Preparation Time:</b>    {{meal_type.prep_time}}<br><b>Cooking Time:</b>    {{meal_type.cook_time}}<br><b>Serves:</b>    {{meal_type.servings}}</p>
             </div>
@@ -144,7 +144,7 @@
     <div class="col-lg-3 col-md-6 mb-4">
         <div class="card h-80 text-center text-white bg-gradient-1">
             <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
-            <h4 class="card-header">{{meal_type.meal_title}}</h4>
+            <h4 class="card-header text-capitalize">{{meal_type.meal_title}}</h4>
             <div class="card-body">
                 <p class="card-text"><b>Created By:</b>    {{meal_type.chef_name}}<br><b>Preparation Time:</b>    {{meal_type.prep_time}}<br><b>Cooking Time:</b>    {{meal_type.cook_time}}<br><b>Serves:</b>    {{meal_type.servings}}</p>
             </div>

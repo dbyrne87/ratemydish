@@ -1,100 +1,149 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Edit Recipe</h1>
-<form class="col-lg-6 mx-auto" action="{{url_for('insert_recipe')}}" method="POST">
-          <div class="card add-a-recipe">
-            <h1 class="card-header text-center">Edit Your Recipe</h1>
-              <div class="card-body">
-                <div>
-                  <input type="text" id="meal_title" name="meal_title" class="form-control field-padding" placeholder="Recipe Name" value="{{task.meal_title}}">
-                </div>
-                <div>
-                    <input type="text" id="chef_name" name="chef_name" class="form-control field-padding" placeholder="Chef's Name" value="{{task.chef_name}}" readonly>
-                </div>
-                <div>
-                    <select class="form-control d-table-row col-lg-5" id="meal_type" name="meal_type">
-                      <option selected disabled>Choose Your Meal Type</option>
-                      <option>1</option>
-                    </select>
-                    
-                    <select class="form-control d-table-row col-lg-5" id="cuisine_type" name="cuisine_type">
-                      <option selected disabled>Choose Your Cuisine Type</option>
-                      <option>1</option>
-                    </select>
-                </div>
-                <br>
-                    <div class="row">
-                    
-                        <span class="input-group-text" id="basic-addon1">Prep Time In Mins</span>
-                    <select class="form-control col-lg-3" id="prep_time" name="prep_time"></select>
-                    
-                    
-                        <span class="input-group-text " id="basic-addon1">Cook Time In Mins</span>
-                    <select class="form-control col-lg-3" id="cook_time" name="cook_time"></select>  
-                    
-                </div>    
-                <br>
-                    <div class="row">
-                    
-                        <span class="input-group-text" id="basic-addon1">Servings</span>
-                    <select class="form-control col-lg-3" id="servings" name="servings"></select>
-                    
-                    
-                       <select class="form-control d-table-row col-lg-5" id="special_diet" name="special_diet">
-                      <option selected disabled>Special Diet</option>
-                      <option type="number">1</option>
-                    </select>
-                    
-                </div>
-                 <br>
-                    <div class="row">
-                    
-                        <input type="number" id="calories" name="calories" class="form-control field-padding col-lg-4" placeholder="Calories Per Serving">
-                    
-                    
-                       <select class="form-control d-table-row col-lg-5" id="difficulty" name="difficulty">
-                      <option selected disabled>Difficulty</option>
-                      <option>1</option>
-                    </select>
-                    
-                </div> 
-                <div>
-                  <input type="text" id="image_url" name="image_url" class="form-control field-padding" placeholder="Image Url">
-                </div>
-               <!-- field to clone -->
-                <div id="entry1" class="clonedInput_1">
-                  <!-- Text input-->
-                  
-                    <label class="label_instructions" for="input_instructions">Instructions</label>
-                    <input id="email_address" name="email_address" type="text" class="input_instructions">
-                  
-                </div>
-                
-                <!-- add/remove buttons -->
-                <button type="button" id="btnAdd_1" name="btnAdd">Add email</button>
-                <button type="button" id="btnDel_1" name="btnDel">Remove email</span></button>
-                
-                <!-- field to clone -->
-                <div id="phone1" class="clonedInput_2">
-                  <!-- Text input-->
-                  
-                    <label class="label_phone" for="phone_number">Phone:</label>
-                    <input id="phone_number" name="phone_number" type="tel" class="input_phone">
-                 
-                </div>
-                
-                <!-- add/remove buttons -->
-                <button type="button" id="btnAdd_2" name="btnAdd_2">Add phone</button>
-                <button type="button" id="btnDel_2" name="btnDel_2">Remove phone</button>
-                
-                <div>
-                    <input type="text" id="likes" name="likes" class="form-control field-padding" placeholder="Likes"hidden readonly>
-                </div>
-                <div>
-                    <input type="text" id="dislikes" name="dislikes" class="form-control field-padding" placeholder="Dislikes"hidden readonly>
-                </div>
-                
-<button type="submit"></button>
+{% extends 'base_forms.html' %} {% block content %}
 
-        </form>
+<form id="add_recipe_card" class="col-lg-12 mx-auto" action="{{url_for('insert_recipe')}}" method="POST">
+    {% with messages = get_flashed_messages() %} 
+        {% if messages %} 
+            {% for message in messages %}
+                <p class="alert alert-success col-lg-6 mx-auto" role="alert">{{ message }}</p>
+            {% endfor %} 
+        {% endif %} 
+    {% endwith %}
+    <div class="card">
+        <h1 class="card-header">Edit Your Recipe</h1>
+            
+        <div class="card-body text-left">
 
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group form-top-margin">
+                            <label for="meal_title">Meal Title</label>
+                            <input type="text" id="meal_title" name="meal_title" class="form-control" placeholder="Recipe Name" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group form-top-margin">
+                            <label for="chef_name">Chef's Name</label>
+                            <input type="text" id="chef_name" name="chef_name" class="form-control" placeholder="Chef's Name" value="{{session['username']}}" readonly>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="meal_type">Meal Type</label>
+                                <select class="col-md form-control field-padding input-padding" id="meal_type" name="meal_type" required>
+                                    <option selected disabled>'Breakfast', 'Lunch' etc.</option>
+                                        {% for meal_types in meal_types %}
+                                            <option>{{meal_types.meal_type}}</option>
+                                        {% endfor %}
+                                </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="cuisine_type">Cuisine Type</label>
+                                <select class="form-control field-padding input-padding" id="cuisine_type" name="cuisine_type" required>
+                                    <option selected disabled>'Chinese', 'French', 'Italian' etc.</option>
+                                    {% for cuisine_types in cuisine_types %}
+                                        <option>{{cuisine_types.cuisine_types}}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="difficulty">Difficulty</label>
+                                <select class="form-control field-padding input-padding" id="difficulty" name="difficulty" required>
+                                    <option selected disabled>'Easy', 'Medium', 'Hard'</option>
+                                        <option>Easy</option>
+                                        <option>Medium</option>
+                                        <option>Hard</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="prep_time">Prep. Time</label>
+                                <input type="number" id="prep_time" name="prep_time" class="form-control" placeholder="In Minutes" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="cook_time">Cook Time</label>
+                                <input type="number" id="cook_time" name="cook_time" class="form-control" placeholder="In Minutes" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="servings">Servings</label>
+                                <input type="number" id="servings" name="servings" class="form-control" placeholder="Number Only" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="calories">Calories</label>
+                                <input type="number" id="calories" name="calories" class="form-control" placeholder="Per Serving" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="special_diet">Special Diet</label>
+                                <select class="form-control" id="special_diet" name="special_diet" required>
+                                    <option selected disabled>'Gluten Free', 'Low Fat' etc.</option>
+                                    {% for special_diets in special_diet %}
+                                        <option>{{special_diets.special_diet}}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="prep_time">Image Address</label>
+                                <input type="url" id="image_url" name="image_url" class="form-control" placeholder="Example: 'http://www.myimage.com'  **If you don't have an image leave this blank">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div id="entry1" class="clonedInput_1 col-md-6">
+                        <div class="form-group">
+                            <label class="ingredients_label" for="input_ingredients">Ingredients & Utensils</label>
+                                <input type="text" id="input_ingredients" name="input_ingredients" class="form-control field_ingredients" placeholder="'Tomatoes', 'Potato', 'Pot', 'Pan' etc." required>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" id="btnAdd_1" name="btnAdd" class="btn btn-outline-success col-md-2"><i class="fas fa-plus"></i> Add Another</button>
+                <button type="button" id="btnDel_1" name="btnDel" class="btn btn-outline-success col-md-2"><i class="fas fa-minus"></i> Remove</button>
+                
+                <div class="row">
+                    <div id="instruction1" class="clonedInput_2 col-md-6">
+                        <div class="form-group">
+                            <label class="instructions_label" for="input_instructions">Instructions</label>
+                                <input type="text" id="input_instructions" name="input_instructions" class="form-control field_instructions" placeholder="'In a bowl, add the eggs and flower etc.'" required>
+                        </div>
+                    </div>
+                </div>
+                        <button type="button" id="btnAdd_2" name="btnAdd_2" class="btn btn-outline-success col-md-2"><i class="fas fa-plus"></i> Add Another</button>
+                        <button type="button" id="btnDel_2" name="btnDel_2" class="btn btn-outline-success col-md-2"><i class="fas fa-minus"></i> Remove</button>
+                
+                <div class="d-none">
+                    <input type="number" id="likes" name="likes" class="form-control">
+                    <input type="number" id="dislikes" name="dislikes" class="form-control">
+                    <textarea id="comments" name="comments" class="form-control"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" id='recipe_submit-button' class="btn btn-outline-success col-lg-4"><i class="fas fa-hamburger"></i>  Add Recipe</button>
+                </div>
+    </div>
+</form>
+
+    
 {% endblock %}

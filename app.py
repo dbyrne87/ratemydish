@@ -154,20 +154,54 @@ def view_recipe(search):
         username=mongo.db.users.find_one({"username": session['username']}))
     return render_template('recipepage.html', task=title_results)   
 
-# move this to the view recipe page so that it can be edited #
-@app.route('/edit_test')
-def edit_test():
-    return render_template("editbuttontest.html",
-    meal_type_category=mongo.db.meal_type.find())
+
+@app.route('/increase_recipe_likes', methods=['POST', 'GET'])
+def increase_recipe_likes():
+    if 'username' in session:
+        mongo.db.meal_type.update( {"_id": ObjectId((request.form['increase_likes_button']))}, { "$inc": { "likes": 1 } } )
+        the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_likes_button']))} )
+        return render_template('recipepage.html', task=the_task,
+        flash=flash('Thanks For Rating This Recipe!'),
+        username=mongo.db.users.find_one({"username": session['username']}))
+    return render_template('recipepage.html', task=the_task,
+    flash=flash('Sorry You must be logged in to Like a Recipe'))
+    
+    
+@app.route('/increase_recipe_dislikes', methods=['POST', 'GET'])
+def increase_recipe_dislikes():
+    if 'username' in session:
+        mongo.db.meal_type.update_one({'_id': ObjectId((request.form['increase_dislikes_button']))}, { "$inc": { "dislikes": 1 } })
+        the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_dislikes_button']))} )
+        return render_template('recipepage.html', task=the_task,
+        flash=flash('Thanks For Rating This Recipe!'),
+        username=mongo.db.users.find_one({"username": session['username']}))
+    return render_template('recipepage.html', task=the_task,
+    flash=flash('Sorry You must be logged in to Dislike a Recipe'))
+    
+@app.route('/add_comment/<search>', methods=['POST', 'GET'])
+def add_comment(search):
+    if 'username' in session:
+        add_this_comment = request.form['comment']
+        mongo.db.meal_type.update( {"_id": ObjectId((request.form['add_comment_button']))}, { "$push": { "comments": add_this_comment }})
+        the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['add_comment_button']))} )
+        return render_template('recipepage.html', task=the_task,
+        flash=flash('Thank You For Your Comment!'),
+        username=mongo.db.users.find_one({"username": session['username']}))
+    return render_template('recipepage.html', task=the_task,
+    flash=flash('Sorry You must be logged in to Dislike a Recipe'))
+            
 
 # Get's the _id of the recipe's edit button, queries the data base for the specific recipe details or
 # renders the editrecipe.html page with the recipe data for updating #
-@app.route('/edit_recipe/<meal_type>')
-def edit_recipe(meal_type):
-    the_task =  mongo.db.meal_type.find_one({"_id": ObjectId(meal_type)})
+@app.route('/edit_recipe/<search>', methods=['POST', 'GET'])
+def edit_recipe(search):
+    the_task =  mongo.db.meal_type.find_one({"_id": ObjectId((request.form['edit_button']))})
     all_categories =  mongo.db.meal_type.find()
     return render_template('editrecipe.html', task=the_task,
                            categories=all_categories,
+    meal_types= mongo.db.meal_types.find(),
+    cuisine_types= mongo.db.cuisine_types.find(),
+    special_diet= mongo.db.special_diets.find(),                       
     username=mongo.db.users.find_one({"username": session['username']}))  
 
 # Search the database for matching word/s in the Meal Title, Prep Instructions or Cooking Instruction Values  #    
@@ -238,16 +272,36 @@ def logout():
 def category_results():
     if request.form['type_category_button'] in ('Breakfast', 'Lunch', 'Dinner', 'Snack'):
         category_results=mongo.db.meal_type.find({'meal_type': request.form['type_category_button']})
-        return render_template('category_results.html', tasks=category_results)
+        return render_template('search_results.html',
+        meal_type_category= meal_types_category,
+        cuisine_type_category=cuisine_type_categories,
+        special_diet_type_category=special_diet_type_category,
+        difficulty_type_category=difficulty_type_category,
+        task=category_results)
     elif request.form['type_category_button'] in ('American', 'Chinese', 'French', 'Greek', 'Indian', 'Irish', 'Italian', 'Mexican', 'Thai', 'Turkish', 'Other'):
          category_results=mongo.db.meal_type.find({'cuisine_type': request.form['type_category_button']})
-         return render_template('category_results.html', tasks=category_results)
+         return render_template('search_results.html',
+         meal_type_category= meal_types_category,
+         cuisine_type_category=cuisine_type_categories,
+         special_diet_type_category=special_diet_type_category,
+         difficulty_type_category=difficulty_type_category,
+         task=category_results)
     elif request.form['type_category_button'] in ('Vegetarian', 'Vegan', 'Weight Watchers', 'Gluten-free', 'Ketogenic', 'High-protein', 'Low Fat', 'Low-Carb', 'Other Diet', 'Not Applicable'):
          category_results=mongo.db.meal_type.find({'special_diet': request.form['type_category_button']})
-         return render_template('category_results.html', tasks=category_results)
+         return render_template('search_results.html',
+         meal_type_category= meal_types_category,
+         cuisine_type_category=cuisine_type_categories,
+         special_diet_type_category=special_diet_type_category,
+         difficulty_type_category=difficulty_type_category,
+         task=category_results)
     elif request.form['type_category_button'] in ('Easy', 'Medium', 'Hard'):
          category_results=mongo.db.meal_type.find({'difficulty': request.form['type_category_button']})
-         return render_template('category_results.html', tasks=category_results)     
+         return render_template('search_results.html',
+         meal_type_category= meal_types_category,
+         cuisine_type_category=cuisine_type_categories,
+         special_diet_type_category=special_diet_type_category,
+         difficulty_type_category=difficulty_type_category,
+         task=category_results)     
        
 
 if __name__ == '__main__':
