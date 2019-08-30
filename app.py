@@ -57,7 +57,7 @@ def meal_types():
 @app.route('/contact_us', methods=['POST', 'GET'])
 def contact_us():
     return render_template('contact_us.html')
-    
+
 @app.route('/send_email', methods=['POST', 'GET'])
 def send_email():
     email = Message('You Have Mail', recipients=[MAIL_RECIPIENT])
@@ -154,7 +154,7 @@ def view_recipe(search):
         username=mongo.db.users.find_one({"username": session['username']}))
     return render_template('recipepage.html', task=title_results)   
 
-
+# When Like Button is clicked it Increses Likes in the database of that recipe by 1 each time #
 @app.route('/increase_recipe_likes', methods=['POST', 'GET'])
 def increase_recipe_likes():
     if 'username' in session:
@@ -166,7 +166,7 @@ def increase_recipe_likes():
     return render_template('recipepage.html', task=the_task,
     flash=flash('Sorry You must be logged in to Like a Recipe'))
     
-    
+# When Dislike Button is clicked it Increses Dislikes in the database of that recipe by 1 each time #    
 @app.route('/increase_recipe_dislikes', methods=['POST', 'GET'])
 def increase_recipe_dislikes():
     if 'username' in session:
@@ -177,7 +177,9 @@ def increase_recipe_dislikes():
         username=mongo.db.users.find_one({"username": session['username']}))
     return render_template('recipepage.html', task=the_task,
     flash=flash('Sorry You must be logged in to Dislike a Recipe'))
-    
+
+# If a comment is made it is added to the specific recipe as an array, further comments are added to this array.#
+# If the comment key doesn't exist it is added#
 @app.route('/add_comment/<search>', methods=['POST', 'GET'])
 def add_comment(search):
     if 'username' in session:
@@ -197,28 +199,34 @@ def add_comment(search):
 def edit_recipe(search):
     the_task =  mongo.db.meal_type.find_one({"_id": ObjectId((request.form['edit_button']))})
     all_categories =  mongo.db.meal_type.find()
-    return render_template('editrecipe.html', task=the_task,
-                           categories=all_categories,
-    meal_types= mongo.db.meal_types.find(),
-    cuisine_types= mongo.db.cuisine_types.find(),
-    special_diet= mongo.db.special_diets.find(),                       
-    username=mongo.db.users.find_one({"username": session['username']}))  
+    if 'username' in session:
+        if session.get("username") == the_task.get("chef_name"):
+            return render_template('editrecipe.html', task=the_task,
+            categories=all_categories,
+            meal_types= mongo.db.meal_types.find(),
+            cuisine_types= mongo.db.cuisine_types.find(),
+            special_diet= mongo.db.special_diets.find(),                       
+            username=mongo.db.users.find_one({"username": session['username']}))
+        return render_template("addrecipe.html",
+        meal_types= mongo.db.meal_types.find(),
+        cuisine_types= mongo.db.cuisine_types.find(),
+        special_diet= mongo.db.special_diets.find(),
+        flash=flash('You must be the Chef who Added The Recipe, please add one below!'),
+        username=mongo.db.users.find_one({"username": session['username']})) 
+    return render_template('register_login.html',
+    flash=flash('You Must be Logged In To Edit A Recipe!'))    
 
-# Search the database for matching word/s in the Meal Title, Prep Instructions or Cooking Instruction Values  #    
+# Search the database for matching word/s in the Meal Title or Ingredients fields  #    
 @app.route('/search', methods=['POST', 'GET'])
 def search():
     search = request.form['search']
     title_results =  mongo.db.meal_type.find( { '$or': [ {'meal_title': { '$regex': search,  '$options': 'i' }}, 
-                                              {'input_ingredients': { '$regex': search, '$options': 'i' }} ,
-                                              {'Field2_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field3_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field4_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field5_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field6_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field7_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field8_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field9_input_ingredients': { '$regex': search,  '$options': 'i' }},
-                                              {'Field10_input_ingredients': { '$regex': search,  '$options': 'i' }}] })
+        {'input_ingredients': { '$regex': search, '$options': 'i' }},
+        {'Field2_input_ingredients': { '$regex': search,  '$options': 'i' }}, {'Field3_input_ingredients': { '$regex': search,  '$options': 'i' }},
+        {'Field4_input_ingredients': { '$regex': search,  '$options': 'i' }}, {'Field5_input_ingredients': { '$regex': search,  '$options': 'i' }},
+        {'Field6_input_ingredients': { '$regex': search,  '$options': 'i' }}, {'Field7_input_ingredients': { '$regex': search,  '$options': 'i' }},
+        {'Field8_input_ingredients': { '$regex': search,  '$options': 'i' }}, {'Field9_input_ingredients': { '$regex': search,  '$options': 'i' }},
+        {'Field10_input_ingredients': { '$regex': search,  '$options': 'i' }}] })
   
     #Filters out multiples of the same recipe being returned to the user
     unique = []
@@ -250,12 +258,221 @@ def add_recipe():
 def insert_recipe():
     meals=mongo.db.meal_type
     meals.insert_one(request.form.to_dict())
+    mongo.db.meal_type.find_and_modify( {'likes': '0'}, update={"$set": {'likes': 0, 'dislikes': 0, 'comments': [] }})
     return render_template('addrecipe.html',
             flash=flash('Your Recipe Has Been Added!'),
             meal_types= mongo.db.meal_types.find(),
             cuisine_types= mongo.db.cuisine_types.find(),
             special_diet= mongo.db.special_diets.find(),
             username=mongo.db.users.find_one({"username": session['username']}))
+            
+@app.route('/update_recipe', methods=['POST', 'GET']) 
+def update_recipe():
+    likes = mongo.db.meal_type.find_one({"_id": ObjectId((request.form['recipe_update-button']))})
+    likes_count = likes.get('likes')
+    dislikes_count = likes.get('dislikes')
+    comments_count = likes.get('comments')
+    mongo.db.meal_type.find_one_and_replace( {"_id": ObjectId((request.form['recipe_update-button']))},
+        {"meal_title": (request.form['meal_title']), "chef_name": (request.form['chef_name']),
+            "meal_type": (request.form['meal_type']), "difficulty": (request.form['difficulty']),
+            "prep_time": (request.form['prep_time']), "cook_time": (request.form['cook_time']),
+            "servings": (request.form['servings']), "calories": (request.form['calories']),
+            "special_diet": (request.form['special_diet']), "image_url": (request.form['image_url']),
+            "likes": likes_count, "dislikes": dislikes_count,
+            "comments": comments_count, "input_ingredients": (request.form['input_ingredients']),
+            "input_instructions": (request.form['input_instructions'])
+        })
+    # Input Ingredients #
+    try:
+        if (request.form['Field10_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
+                    "Field4_input_ingredients": (request.form['Field4_input_ingredients']), "Field5_input_ingredients": (request.form['Field5_input_ingredients']),
+                    "Field6_input_ingredients": (request.form['Field6_input_ingredients']), "Field7_input_ingredients": (request.form['Field7_input_ingredients']),
+                    "Field8_input_ingredients": (request.form['Field8_input_ingredients']), "Field9_input_ingredients": (request.form['Field9_input_ingredients']),
+                    "Field10_input_ingredients": (request.form['Field10_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    try:
+        if (request.form['Field9_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
+                    "Field4_input_ingredients": (request.form['Field4_input_ingredients']), "Field5_input_ingredients": (request.form['Field5_input_ingredients']),
+                    "Field6_input_ingredients": (request.form['Field6_input_ingredients']), "Field7_input_ingredients": (request.form['Field7_input_ingredients']),
+                    "Field8_input_ingredients": (request.form['Field8_input_ingredients']), "Field9_input_ingredients": (request.form['Field9_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    try:
+        if (request.form['Field8_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
+                    "Field4_input_ingredients": (request.form['Field4_input_ingredients']), "Field5_input_ingredients": (request.form['Field5_input_ingredients']),
+                    "Field6_input_ingredients": (request.form['Field6_input_ingredients']), "Field7_input_ingredients": (request.form['Field7_input_ingredients']),
+                    "Field8_input_ingredients": (request.form['Field8_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    try:
+        if (request.form['Field7_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
+                    "Field4_input_ingredients": (request.form['Field4_input_ingredients']), "Field5_input_ingredients": (request.form['Field5_input_ingredients']),
+                    "Field6_input_ingredients": (request.form['Field6_input_ingredients']), "Field7_input_ingredients": (request.form['Field7_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    try:
+        if (request.form['Field6_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
+                    "Field4_input_ingredients": (request.form['Field4_input_ingredients']), "Field5_input_ingredients": (request.form['Field5_input_ingredients']),
+                    "Field6_input_ingredients": (request.form['Field6_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    try:
+        if (request.form['Field5_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
+                    "Field4_input_ingredients": (request.form['Field4_input_ingredients']), "Field5_input_ingredients": (request.form['Field5_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    try:
+        if (request.form['Field4_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
+                    "Field4_input_ingredients": (request.form['Field4_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    try:
+        if (request.form['Field3_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients'])
+                }})
+    except KeyError:
+        pass                                        
+    try:
+        if (request.form['Field2_input_ingredients']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"Field2_input_ingredients": (request.form['Field2_input_ingredients'])
+                }})
+    except KeyError:
+        pass
+    # Input Instructions #
+    try:
+        if (request.form['ID10_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions']),
+                    "ID4_input_instructions": (request.form['ID4_input_instructions']), "ID5_input_instructions": (request.form['ID5_input_instructions']),
+                    "ID6_input_instructions": (request.form['ID6_input_instructions']), "ID7_input_instructions": (request.form['ID7_input_instructions']),
+                    "ID8_input_instructions": (request.form['ID8_input_instructions']), "ID9_input_instructions": (request.form['ID9_input_instructions']),
+                    "ID10_input_instructions": (request.form['ID10_input_instructions'])
+                }})
+    except KeyError:
+        pass
+    
+    try:    
+        if (request.form['ID9_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))}, 
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions']),
+                    "ID4_input_instructions": (request.form['ID4_input_instructions']), "ID5_input_instructions": (request.form['ID5_input_instructions']),
+                    "ID6_input_instructions": (request.form['ID6_input_instructions']), "ID7_input_instructions": (request.form['ID7_input_instructions']),
+                    "ID8_input_instructions": (request.form['ID8_input_instructions']), "ID9_input_instructions": (request.form['ID9_input_instructions'])
+                }})
+    except KeyError:
+        pass
+    
+    try:    
+        if (request.form['ID8_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions']),
+                    "ID4_input_instructions": (request.form['ID4_input_instructions']), "ID5_input_instructions": (request.form['ID5_input_instructions']),
+                    "ID6_input_instructions": (request.form['ID6_input_instructions']), "ID7_input_instructions": (request.form['ID7_input_instructions']),
+                    "ID8_input_instructions": (request.form['ID8_input_instructions'])
+                }}) 
+    except KeyError:
+        pass
+    try:    
+        if (request.form['ID7_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions']),
+                    "ID4_input_instructions": (request.form['ID4_input_instructions']), "ID5_input_instructions": (request.form['ID5_input_instructions']),
+                    "ID6_input_instructions": (request.form['ID6_input_instructions']), "ID7_input_instructions": (request.form['ID7_input_instructions'])
+                }}) 
+    except KeyError:
+        pass
+    try:    
+        if (request.form['ID6_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions']),
+                    "ID4_input_instructions": (request.form['ID4_input_instructions']), "ID5_input_instructions": (request.form['ID5_input_instructions']),
+                    "ID6_input_instructions": (request.form['ID6_input_instructions'])
+                }}) 
+    except KeyError:
+        pass
+    try:    
+        if (request.form['ID5_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions']),
+                    "ID4_input_instructions": (request.form['ID4_input_instructions']), "ID5_input_instructions": (request.form['ID5_input_instructions'])
+                }}) 
+    except KeyError:
+        pass
+    try:    
+        if (request.form['ID4_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions']),
+                    "ID4_input_instructions": (request.form['ID4_input_instructions'])
+                }}) 
+    except KeyError:
+        pass
+    try:    
+        if (request.form['ID3_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions']), "ID3_input_instructions": (request.form['ID3_input_instructions'])
+                }}) 
+    except KeyError:
+        pass
+    try:    
+        if (request.form['ID2_input_instructions']):
+            mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
+                { "$set":  
+                    {"ID2_input_instructions": (request.form['ID2_input_instructions'])
+                }}) 
+    except KeyError:
+        pass
+    
+    return render_template("home.html", 
+    most_liked=mongo.db.meal_type.find(),
+    favourites=mongo.db.meal_type.find(),
+    meal_type_category=meal_types_category,
+    cuisine_type_category=cuisine_type_categories,
+    special_diet_type_category= special_diet_type_category,
+    difficulty_type_category=difficulty_type_category,
+    username=mongo.db.users.find_one({"username": session['username']}))
+            
+            
 
 # If Logout Button is clicked then it removes the session cookie and brings them to the register page with message #
 @app.route('/logout')
