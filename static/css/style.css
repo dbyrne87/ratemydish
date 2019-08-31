@@ -286,6 +286,7 @@ video {
 /*   search_results.html    */
 #search-footer{
   padding:0;
+  margin-bottom:50px;
 }
 
 
@@ -330,12 +331,12 @@ li:empty{
 #comments-title{
   color:black;
   padding-bottom:20px;
+  margin-bottom:20px;
 }
 
 #comment{
   color:black;
-  border-bottom:3px solid #FED300;
-  margin-bottom:30px;
+  margin-bottom:20px;
   word-wrap: normal;
 }
 
@@ -350,6 +351,14 @@ li:empty{
 #comment:focus {
   border-color: #FED300 !important;
   box-shadow: inset 0 1px 1px rgba(254, 211, 0, 0.075), 0 0 8px rgba(254, 211, 0, 0.6) !important;
+}
+
+.btn-warning,
+.btn-primary,
+.btn-danger{
+  color: white;
+  border-radius: 20px;
+  margin-bottom:15px;
 }
 
 /* ########   Media Queries   ######## */
@@ -407,6 +416,7 @@ li:empty{
    .recipe-page-list-boxes{ /* All Recipe Related boxes in the recipepage.html */
     top:0;
     margin-bottom:2px;
+    min-height:60px;
    }   
 }
 

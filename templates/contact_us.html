@@ -1,15 +1,13 @@
 {% extends 'base.html' %} {% block content %}
-<div class="contact-form-area">
-            <h5 class="card-header text-center">Contact us</h5>
-            <form method="POST" action="{{ url_for('send_email') }}"> 
+
+    <form class="add_recipe_card" method="POST" action="{{ url_for('send_email') }}">
+        <main class="card">
+            <h1 class="card-header text-center">Contact us</h1>
+        
             <div class="card-body">
-                 {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        {% for message in messages %}
-                        <h3 class="text-center">{{ message }}</h3>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}    
+                {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+                    <h3 class="text-center">{{ message }}</h3>
+                {% endfor %} {% endif %} {% endwith %}
                 <div>
                     <input type="text" id="name" name="name" class="form-control field-padding" placeholder="Name">
                 </div>
@@ -19,9 +17,11 @@
                 <div>
                     <textarea id="message" name="message" class="form-control field-padding" rows="5" placeholder="Message"></textarea>
                 </div>
- 
-               <button type="submit" class="btn btn-outline-success col-lg-4" name="button">Send</button>
+        
+                <button type="submit" class="btn btn-outline-success col-lg-4" name="button">Send</button>
             </div>
-        </form>    
-        </div>
-{% endblock %}        
+        </main>
+    </form>    
+    
+
+{% endblock %}

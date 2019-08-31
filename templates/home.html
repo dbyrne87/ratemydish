@@ -1,8 +1,9 @@
 {% extends 'base.html' %} {% block content %}
 
-        <div class="jumbotron-fluid">
+        <section class="jumbotron-fluid"> <!--Jumbotron Background Image -->
             <h3 class="search-text">Search</h3>
             <br>
+            <!-- Search field will search for the word/s in the database under the meal_title or instruction fields, and will display results in the search_results.html page -->
             <div class="form-group col-8 mx-auto">
                 <form method="POST" action="{{ url_for('search') }}">
                     <input type="text" class="form-control " id="search" name="search" placeholder='"Lasagne","Cheese Pizza" or an Ingredient etc.'>
@@ -14,13 +15,14 @@
             <br>
             <form>
                 <h3>Browse By Category</h3>
+                <!-- Buttons to call a specific modal -->
                 <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#meal-type-category"><i class="fas fa-utensils"></i> Meal Type</button>
                 <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#cuisine-type-category"><i class="fas fa-flag-usa"></i> Cuisine Origin</button>
                 <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#special-diet-type-category"><i class="fas fa-bread-slice"></i> Special Diet</button>
                 <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#difficulty-type-category"><i class="fas fa-thermometer-three-quarters"></i> Difficulty</button>
-
             </form>
-            <!-- Modal -->
+            
+            <!-- Modal for Meal Type -->
             <div class="modal fade" id="meal-type-category" tabindex="-1" role="dialog" aria-labelledby="meal-type-category" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -31,9 +33,11 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                            <!--Shows the user only results that are available ie. if no Breakfast recipes are in the database it will not be shown to the user-->
                             <form method="POST" action="{{ url_for('category_results') }}">
-                                {% for meal_type in meal_type_category[0:3] %}
+                                {% for meal_type in meal_type_category[0:3] %} <!--  Limited the result to 4 as that's all that should be available-->
                                     <div class="selection-items">
+                                        <!-- Displays each result found as a button -->
                                         <button type="submit" class="btn btn-outline-success selection-button col-sm-12" name="type_category_button" value="{{meal_type[0:20]}}">{{meal_type[0:20]}}</button>   
                                     </div>  
                                 {%endfor%} 
@@ -42,20 +46,22 @@
                     </div>
                 </div>
             </div>
-                      <!-- Modal -->
+            
+            <!-- Modal for Cuisine Origin -->
             <div class="modal fade" id="cuisine-type-category" tabindex="-1" role="dialog" aria-labelledby="cuisine-type-category" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Cuisine Type</h5>
+                            <h5 class="modal-title" id="exampleModalLongTitle">Cuisine Origin</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                          <form method="POST" action="{{ url_for('category_results') }}">    
-                            {% for cuisine_type in cuisine_type_category[0:3] %}
+                            {% for cuisine_type in cuisine_type_category %} <!-- Get all Unique results that are in the database-->
                                 <div class="selection-items">
+                                    <!-- Displays each result found as a button -->
                                     <button type="submit" class="btn btn-outline-success selection-button col-sm-12" name="type_category_button" value="{{cuisine_type[0:20]}}">{{cuisine_type[0:20]}}</button>   
                                 </div> 
                             {%endfor%}
@@ -64,7 +70,8 @@
                     </div>
                 </div>
             </div>
-                        <!-- Modal -->
+            
+            <!-- Modal for Special Diet -->
             <div class="modal fade" id="special-diet-type-category" tabindex="-1" role="dialog" aria-labelledby="special-diet-type-category" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -76,8 +83,9 @@
                         </div>
                         <div class="modal-body">
                         <form method="POST" action="{{ url_for('category_results') }}">     
-                            {% for special_diet in special_diet_type_category[0:3] %}
+                            {% for special_diet in special_diet_type_category%} <!-- Get all Unique results that are in the database-->
                                 <div class="selection-items">
+                                    <!-- Displays each result found as a button -->
                                     <button type="submit" class="btn btn-outline-success selection-button col-sm-12" name="type_category_button" value="{{special_diet[0:20]}}">{{special_diet[0:20]}}</button>   
                                 </div> 
                             {%endfor%} 
@@ -86,7 +94,8 @@
                     </div>
                 </div>
             </div>
-                        <!-- Modal -->
+            
+            <!-- Modal for Difficulty -->
             <div class="modal fade" id="difficulty-type-category" tabindex="-1" role="dialog" aria-labelledby="difficulty-type-category" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -97,6 +106,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                            <!-- Displays each Difficulty as a button -->
                         <form method="POST" action="{{ url_for('category_results') }}">     
                             <div class="selection-items">
                                 <button type="submit" class="btn btn-outline-success selection-button col-sm-12" name="type_category_button" value="Easy">Easy</button>   
@@ -112,49 +122,53 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-    <div class="container">
+    <header class="container">
         <h3 class="col-xs-6 mx-auto text-center sub-heading">Most Liked</h3>
-    </div>
-    <div class="container">
+    </header>
+    <article class="container">
         <div class="row">
-    {% for meal_type in most_liked[0:4]|sort(attribute='likes') %}
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card h-80 text-center text-white bg-gradient-1">
-            <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
-            <h4 class="card-header text-capitalize">{{meal_type.meal_title}}</h4>
-            <div class="card-body">
-                <p class="card-text"><b>Created By:</b>    {{meal_type.chef_name}}<br><b>Preparation Time:</b>    {{meal_type.prep_time}}<br><b>Cooking Time:</b>    {{meal_type.cook_time}}<br><b>Serves:</b>    {{meal_type.servings}}</p>
+            <!-- Gets the top 4 most liked recipes from the database and displays them as an individual card to the user -->
+            {% for meal_type in most_liked[0:4]|sort(attribute='likes') %} 
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-80 text-center text-white bg-gradient-1">
+                    <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
+                    <h4 class="card-header text-capitalize">{{meal_type.meal_title}}</h4>
+                    <div class="card-body">
+                        <p class="card-text"><b>Created By:</b>    {{meal_type.chef_name}}<br><b>Preparation Time:</b>    {{meal_type.prep_time}}<br><b>Cooking Time:</b>    {{meal_type.cook_time}}<br><b>Serves:</b>    {{meal_type.servings}}</p>
+                    </div>
+                        <form method="POST" action="{{ url_for('view_recipe', search=meal_type._id) }}">
+                          <button type="submit" class="btn btn-outline-success card-footer" name="get_recipe" value="{{meal_type._id}}"><i class="fas fa-arrow-right"></i> Go To Recipe</button>
+                        </form>
+                </div>
             </div>
-                <form method="POST" action="{{ url_for('view_recipe', search=meal_type._id) }}">
-                  <button type="submit" class="btn btn-outline-success card-footer" name="get_recipe" value="{{meal_type._id}}"><i class="fas fa-arrow-right"></i> Go To Recipe</button>
-                </form>
+            {% endfor %}
         </div>
-    </div>
-{% endfor %}
-</div>
-</div>
-<div class="container">
-        <h3 class="col-xs-12 mx-auto text-center sub-heading">Our Favourites</h3>
-    </div>
-    <div class="container">
-        <div class="row">
-{% for meal_type in favourites[0:4]|sort(attribute='dislikes') %}
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card h-80 text-center text-white bg-gradient-1">
-            <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
-            <h4 class="card-header text-capitalize">{{meal_type.meal_title}}</h4>
-            <div class="card-body">
-                <p class="card-text"><b>Created By:</b>    {{meal_type.chef_name}}<br><b>Preparation Time:</b>    {{meal_type.prep_time}}<br><b>Cooking Time:</b>    {{meal_type.cook_time}}<br><b>Serves:</b>    {{meal_type.servings}}</p>
-            </div>
-                <form method="POST" action="{{ url_for('view_recipe', search=meal_type._id) }}">
-                   <button type="submit" class="btn btn-outline-success card-footer" name="get_recipe" value="{{meal_type._id}}"><i class="fas fa-arrow-right"></i> Go To Recipe</button>
-                </form>
-        </div>
-    </div>
+    </article>
 
-{% endfor %}
-</div>
-</div>
+    <header class="container">
+        <h3 class="col-xs-12 mx-auto text-center sub-heading">Our Favourites</h3>
+    </header>
+    <article class="container">
+        <div class="row">
+            <!-- Gets the first 4 recipes from the database (starting with Breakfast) and displays them as an individual card to the user -->
+        {% for meal_type in favourites[0:4]|sort(attribute='meal_type') %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-80 text-center text-white bg-gradient-1">
+                    <img class="card-img-top" src={{meal_type.image_url}} alt="Card image cap">
+                    <h4 class="card-header text-capitalize">{{meal_type.meal_title}}</h4>
+                        <div class="card-body">
+                            <p class="card-text"><b>Created By:</b>    {{meal_type.chef_name}}<br><b>Preparation Time:</b>    {{meal_type.prep_time}}<br><b>Cooking Time:</b>    {{meal_type.cook_time}}<br><b>Serves:</b>    {{meal_type.servings}}</p>
+                        </div>
+                        <form method="POST" action="{{ url_for('view_recipe', search=meal_type._id) }}">
+                           <button type="submit" class="btn btn-outline-success card-footer" name="get_recipe" value="{{meal_type._id}}"><i class="fas fa-arrow-right"></i> Go To Recipe</button>
+                        </form>
+                </div>
+            </div>
+        {% endfor %}
+        
+        </div>
+    </article>
+    
 {% endblock %}

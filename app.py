@@ -29,13 +29,13 @@ mail = Mail(app)
 mongo = PyMongo(app)
 
 # Global Variables used multiple Times#
-# Get Unique and Specific Data from each Key (Used in home.html) #
+# Get Unique and Specific Data from each Key as used in home.html) #
 meal_types_category = mongo.db.meal_type.distinct('meal_type')
 cuisine_type_categories = mongo.db.meal_type.distinct('cuisine_type')
 special_diet_type_category = mongo.db.meal_type.distinct('special_diet')
 difficulty_type_category = mongo.db.meal_type.distinct('difficulty')
 
-# Homepage will render home.html if user logged in or register.html if not#
+# Homepage will render home.html if user logged in or register.html if not #
 @app.route('/')
 def meal_types():
     # If the user is logged in #
@@ -51,24 +51,6 @@ def meal_types():
         
     # Else send them to the register.html page# 
     return render_template('register_login.html')
-
-
-# Contact Us Form and Function for Sending the email#
-@app.route('/contact_us', methods=['POST', 'GET'])
-def contact_us():
-    return render_template('contact_us.html')
-
-@app.route('/send_email', methods=['POST', 'GET'])
-def send_email():
-    email = Message('You Have Mail', recipients=[MAIL_RECIPIENT])
-    msg_name = request.form['name']
-    msg_email = request.form['email_address']
-    msg_message = request.form['message']
-    email.html = 'From:'+ msg_name + '<br> Email:'+ msg_email + '<br> Message: <br>' + msg_message
-    
-    mail.send(email)
-    return render_template('contact_us.html',
-    flash= flash('Your Email Has been Sent!'))
 
 
 # Register Page, Has Sign Up (/register), Log In(/login) or Continue as Guest Options(/guest_login)#
@@ -154,28 +136,58 @@ def view_recipe(search):
         username=mongo.db.users.find_one({"username": session['username']}))
     return render_template('recipepage.html', task=title_results)   
 
+# If User is Logged In then allow them to add a Recipe #    
+@app.route('/add_recipe')
+def add_recipe():
+    if 'username' in session:
+        return render_template("addrecipe.html",
+        meal_types= mongo.db.meal_types.find(), # Gets the values from the meal_types collection #
+        cuisine_types= mongo.db.cuisine_types.find(), # Gets the values from the cuisine_types collection #
+        special_diet= mongo.db.special_diets.find(), # Gets the values from the special_diets collection #                       
+        username=mongo.db.users.find_one({"username": session['username']}))
+# Else send them to the register page with message #        
+    return render_template('register_login.html',
+           flash=flash('You must Sign In to Add a Recipe!'))
+    
+# Function for inserting the recipe to the database #    
+@app.route('/insert_recipe', methods=['POST'])
+def insert_recipe():
+    meals=mongo.db.meal_type
+    meals.insert_one(request.form.to_dict()) # inserts all the data to the database #
+    # if the image_url wasn't entered give it a default value #
+    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://upload.wikimedia.org/wikipedia/en/f/f9/No-image-available.jpg'}})
+    # Modify the initial like & dislike values to a Integer and the comments value to an array #
+    mongo.db.meal_type.find_and_modify( {'likes': '0'}, update={"$set": {'likes': 0, 'dislikes': 0, 'comments': ['No Comments Yet'] }})
+    return render_template('addrecipe.html', # Returns the user to the add_recipe page with success message #
+            flash=flash('Your Recipe Has Been Added!'),
+            meal_types= mongo.db.meal_types.find(), # Gets the values from the meal_types collection #
+            cuisine_types= mongo.db.cuisine_types.find(), # Gets the values from the cuisine_types collection #
+            special_diet= mongo.db.special_diets.find(), # Gets the values from the special_diets collection #                       
+            username=mongo.db.users.find_one({"username": session['username']}))
+
 # When Like Button is clicked it Increses Likes in the database of that recipe by 1 each time #
 @app.route('/increase_recipe_likes', methods=['POST', 'GET'])
 def increase_recipe_likes():
     if 'username' in session:
-        mongo.db.meal_type.update( {"_id": ObjectId((request.form['increase_likes_button']))}, { "$inc": { "likes": 1 } } )
+        mongo.db.meal_type.update( {"_id": ObjectId((request.form['increase_likes_button']))}, { "$inc": { "likes": 1 } } )#Increments by one on each click#
         the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_likes_button']))} )
-        return render_template('recipepage.html', task=the_task,
+        return render_template('recipepage.html', task=the_task,#Refreshes the current page with flash message and updated like#
         flash=flash('Thanks For Rating This Recipe!'),
         username=mongo.db.users.find_one({"username": session['username']}))
-    return render_template('recipepage.html', task=the_task,
+    return render_template('recipepage.html', task=the_task, #Cannot like a recipe if not logged in#
     flash=flash('Sorry You must be logged in to Like a Recipe'))
+
     
 # When Dislike Button is clicked it Increses Dislikes in the database of that recipe by 1 each time #    
 @app.route('/increase_recipe_dislikes', methods=['POST', 'GET'])
 def increase_recipe_dislikes():
     if 'username' in session:
-        mongo.db.meal_type.update_one({'_id': ObjectId((request.form['increase_dislikes_button']))}, { "$inc": { "dislikes": 1 } })
+        mongo.db.meal_type.update_one({'_id': ObjectId((request.form['increase_dislikes_button']))}, { "$inc": { "dislikes": 1 } })#Increments by one on each click#
         the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_dislikes_button']))} )
-        return render_template('recipepage.html', task=the_task,
+        return render_template('recipepage.html', task=the_task, #Refreshes the current page with flash message and updated dislike#
         flash=flash('Thanks For Rating This Recipe!'),
         username=mongo.db.users.find_one({"username": session['username']}))
-    return render_template('recipepage.html', task=the_task,
+    return render_template('recipepage.html', task=the_task, #Cannot dislike a recipe if not logged in#
     flash=flash('Sorry You must be logged in to Dislike a Recipe'))
 
 # If a comment is made it is added to the specific recipe as an array, further comments are added to this array.#
@@ -183,44 +195,24 @@ def increase_recipe_dislikes():
 @app.route('/add_comment/<search>', methods=['POST', 'GET'])
 def add_comment(search):
     if 'username' in session:
-        add_this_comment = request.form['comment']
-        mongo.db.meal_type.update( {"_id": ObjectId((request.form['add_comment_button']))}, { "$push": { "comments": add_this_comment }})
+        # if comments array is empty it removes the default 'No Comments Yet' before adding the new comment#
+        mongo.db.meal_type.find_and_modify( {'comments': ['No Comments Yet']}, update={"$set": {'comments': [] }})
+        add_this_comment = request.form['comment']# Get the comment from the form #
+        mongo.db.meal_type.update( {"_id": ObjectId((request.form['add_comment_button']))}, { "$push": { "comments": add_this_comment }})# Add te new comment to the array #
         the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['add_comment_button']))} )
-        return render_template('recipepage.html', task=the_task,
+        return render_template('recipepage.html', task=the_task,# Refreshes the page with flash message and updated comment#
         flash=flash('Thank You For Your Comment!'),
         username=mongo.db.users.find_one({"username": session['username']}))
-    return render_template('recipepage.html', task=the_task,
+    return render_template('recipepage.html', task=the_task, #Cannot comment on a recipe if not logged in#
     flash=flash('Sorry You must be logged in to Dislike a Recipe'))
             
-
-# Get's the _id of the recipe's edit button, queries the data base for the specific recipe details or
-# renders the editrecipe.html page with the recipe data for updating #
-@app.route('/edit_recipe/<search>', methods=['POST', 'GET'])
-def edit_recipe(search):
-    the_task =  mongo.db.meal_type.find_one({"_id": ObjectId((request.form['edit_button']))})
-    all_categories =  mongo.db.meal_type.find()
-    if 'username' in session:
-        if session.get("username") == the_task.get("chef_name"):
-            return render_template('editrecipe.html', task=the_task,
-            categories=all_categories,
-            meal_types= mongo.db.meal_types.find(),
-            cuisine_types= mongo.db.cuisine_types.find(),
-            special_diet= mongo.db.special_diets.find(),                       
-            username=mongo.db.users.find_one({"username": session['username']}))
-        return render_template("addrecipe.html",
-        meal_types= mongo.db.meal_types.find(),
-        cuisine_types= mongo.db.cuisine_types.find(),
-        special_diet= mongo.db.special_diets.find(),
-        flash=flash('You must be the Chef who Added The Recipe, please add one below!'),
-        username=mongo.db.users.find_one({"username": session['username']})) 
-    return render_template('register_login.html',
-    flash=flash('You Must be Logged In To Edit A Recipe!'))    
 
 # Search the database for matching word/s in the Meal Title or Ingredients fields  #    
 @app.route('/search', methods=['POST', 'GET'])
 def search():
-    search = request.form['search']
-    title_results =  mongo.db.meal_type.find( { '$or': [ {'meal_title': { '$regex': search,  '$options': 'i' }}, 
+    search = request.form['search']# get value from the search input field#
+    title_results =  mongo.db.meal_type.find( { '$or': [ {'meal_title': { '$regex': search,  '$options': 'i' }}, #searches for the word/s in all meal_title keys in the database#
+        #searches for the word/s in all ingredients keys in the database#
         {'input_ingredients': { '$regex': search, '$options': 'i' }},
         {'Field2_input_ingredients': { '$regex': search,  '$options': 'i' }}, {'Field3_input_ingredients': { '$regex': search,  '$options': 'i' }},
         {'Field4_input_ingredients': { '$regex': search,  '$options': 'i' }}, {'Field5_input_ingredients': { '$regex': search,  '$options': 'i' }},
@@ -228,51 +220,51 @@ def search():
         {'Field8_input_ingredients': { '$regex': search,  '$options': 'i' }}, {'Field9_input_ingredients': { '$regex': search,  '$options': 'i' }},
         {'Field10_input_ingredients': { '$regex': search,  '$options': 'i' }}] })
   
-    #Filters out multiples of the same recipe being returned to the user
-    unique = []
+    #Filters out multiples of the same recipe being returned to the user ie. if 'cheese' is searched for and it is in the meal title and ingredients,#
+    # it will only return the recipe once and not multiple times#
+    unique = [] # Initially empty variable#
     for i in title_results:    
-        if not i in unique:  
+        if not i in unique:# If the recipe is not already in unique append it to unique#  
             unique.append(i)
-    return render_template('search_results.html', 
+    return render_template('search_results.html', # Returns the list of results to the search_results page#
         meal_type_category= meal_types_category,
         cuisine_type_category= cuisine_type_categories,
         special_diet_type_category= special_diet_type_category,
         difficulty_type_category= difficulty_type_category,
         task=unique)
 
-# If User is Logged In then allow them to add a Recipe #    
-@app.route('/add_recipe')
-def add_recipe():
+
+# Get's the _id of the recipe, queries the database for the specific recipe details, renders the editrecipe.html page with the recipe data for updating #
+@app.route('/edit_recipe/<search>', methods=['POST', 'GET'])
+def edit_recipe(search):
+    the_task =  mongo.db.meal_type.find_one({"_id": ObjectId((request.form['edit_button']))})
+    all_categories =  mongo.db.meal_type.find()
     if 'username' in session:
-        return render_template("addrecipe.html",
+        if session.get("username") == the_task.get("chef_name"): #Only the person who origionaly inputted the recipe can modify it#
+            return render_template('editrecipe.html', task=the_task,
+            categories=all_categories,
+            meal_types= mongo.db.meal_types.find(), # Gets the values from the meal_types collection #
+            cuisine_types= mongo.db.cuisine_types.find(), # Gets the values from the cuisine_types collection #
+            special_diet= mongo.db.special_diets.find(), # Gets the values from the special_diets collection #                       
+            username=mongo.db.users.find_one({"username": session['username']}))
+        return render_template("addrecipe.html", #If the user is not the chef it will bring them to the add_recipe page to add their own recipe#
         meal_types= mongo.db.meal_types.find(),
         cuisine_types= mongo.db.cuisine_types.find(),
         special_diet= mongo.db.special_diets.find(),
-        username=mongo.db.users.find_one({"username": session['username']}))
-# Else send them to the register page with message #        
-    return render_template('register_login.html',
-           flash=flash('You must Sign In to Add a Recipe!'))
-    
-# Function for inserting the recipe to the database, returns the to the page with success message #    
-@app.route('/insert_recipe', methods=['POST'])
-def insert_recipe():
-    meals=mongo.db.meal_type
-    meals.insert_one(request.form.to_dict())
-    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://upload.wikimedia.org/wikipedia/en/f/f9/No-image-available.jpg'}})
-    mongo.db.meal_type.find_and_modify( {'likes': '0'}, update={"$set": {'likes': 0, 'dislikes': 0, 'comments': [] }})
-    return render_template('addrecipe.html',
-            flash=flash('Your Recipe Has Been Added!'),
-            meal_types= mongo.db.meal_types.find(),
-            cuisine_types= mongo.db.cuisine_types.find(),
-            special_diet= mongo.db.special_diets.find(),
-            username=mongo.db.users.find_one({"username": session['username']}))
+        flash=flash('You must be the Chef who Added The Recipe, please add your own recipe below!'),
+        username=mongo.db.users.find_one({"username": session['username']})) 
+    return render_template('register_login.html', # If the user is not logged in they will be brought to the register_login page to do so with a message explaining why#
+    flash=flash('You Must be Logged In To Edit A Recipe!'))    
             
+#Function to update recipe in database#
 @app.route('/update_recipe', methods=['POST', 'GET']) 
 def update_recipe():
-    likes = mongo.db.meal_type.find_one({"_id": ObjectId((request.form['recipe_update-button']))})
-    likes_count = likes.get('likes')
-    dislikes_count = likes.get('dislikes')
-    comments_count = likes.get('comments')
+    # Get the current ratings (likes/ dislikes/ comments and stores them in variables before they are deleted in the database) #
+    ratings = mongo.db.meal_type.find_one({"_id": ObjectId((request.form['recipe_update-button']))})
+    likes_count = ratings.get('likes')
+    dislikes_count = ratings.get('dislikes')
+    comments_count = ratings.get('comments')
+    # Replace the recipe with id in the form with this new data, completely wipes all origional data so current likes/dislike & comments are added form the variables and not the form#
     mongo.db.meal_type.find_one_and_replace( {"_id": ObjectId((request.form['recipe_update-button']))},
         {"meal_title": (request.form['meal_title']), "chef_name": (request.form['chef_name']),
             "meal_type": (request.form['meal_type']), "difficulty": (request.form['difficulty']),
@@ -284,8 +276,10 @@ def update_recipe():
             "input_instructions": (request.form['input_instructions'])
         })
     # Input Ingredients #
-    try:
-        if (request.form['Field10_input_ingredients']):
+    # Finds the current amount of fields used in the edit_recipe form and adds only the amount of fields needed with the updated data#
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
+        if (request.form['Field10_input_ingredients']): 
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
                     {"Field2_input_ingredients": (request.form['Field2_input_ingredients']), "Field3_input_ingredients": (request.form['Field3_input_ingredients']),
@@ -296,7 +290,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field9_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -307,7 +303,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field8_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -318,7 +316,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field7_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -328,7 +328,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field6_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -338,7 +340,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field5_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -347,7 +351,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field4_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -356,7 +362,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field3_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -364,7 +372,9 @@ def update_recipe():
                 }})
     except KeyError:
         pass                                        
-    try:
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['Field2_input_ingredients']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -372,8 +382,11 @@ def update_recipe():
                 }})
     except KeyError:
         pass
+   
+   
     # Input Instructions #
-    try:
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['ID10_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -386,7 +399,8 @@ def update_recipe():
     except KeyError:
         pass
     
-    try:    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#    
         if (request.form['ID9_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))}, 
                 { "$set":  
@@ -398,7 +412,8 @@ def update_recipe():
     except KeyError:
         pass
     
-    try:    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['ID8_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -409,7 +424,9 @@ def update_recipe():
                 }}) 
     except KeyError:
         pass
-    try:    
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#    
         if (request.form['ID7_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -419,7 +436,9 @@ def update_recipe():
                 }}) 
     except KeyError:
         pass
-    try:    
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['ID6_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -429,7 +448,9 @@ def update_recipe():
                 }}) 
     except KeyError:
         pass
-    try:    
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['ID5_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -438,7 +459,9 @@ def update_recipe():
                 }}) 
     except KeyError:
         pass
-    try:    
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['ID4_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -447,7 +470,9 @@ def update_recipe():
                 }}) 
     except KeyError:
         pass
-    try:    
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form# 
         if (request.form['ID3_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -455,7 +480,9 @@ def update_recipe():
                 }}) 
     except KeyError:
         pass
-    try:    
+    
+    try: # if this field exists in the form do the below if not don't give an error but try the next #
+    # Only calls the database when it finds the highest numbered field in the form#
         if (request.form['ID2_input_instructions']):
             mongo.db.meal_type.find_one_and_update( {"_id": ObjectId((request.form['recipe_update-button']))},
                 { "$set":  
@@ -464,6 +491,7 @@ def update_recipe():
     except KeyError:
         pass
     
+    # If the image_url is empty or has been removed then update it to the default value #
     mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://upload.wikimedia.org/wikipedia/en/f/f9/No-image-available.jpg'}})
     return render_template("home.html", 
     most_liked=mongo.db.meal_type.find(),
@@ -497,6 +525,7 @@ def category_results():
         special_diet_type_category=special_diet_type_category,
         difficulty_type_category=difficulty_type_category,
         task=category_results)
+        # Complete list of Cuisine Origins if they are not in any recipe in the database then they will not be shown to the user #
     elif request.form['type_category_button'] in ('American', 'Chinese', 'French', 'Greek', 'Indian', 'Irish', 'Italian', 'Mexican', 'Thai', 'Turkish', 'Other'):
          category_results=mongo.db.meal_type.find({'cuisine_type': request.form['type_category_button']})
          return render_template('search_results.html',
@@ -505,6 +534,7 @@ def category_results():
          special_diet_type_category=special_diet_type_category,
          difficulty_type_category=difficulty_type_category,
          task=category_results)
+                 # Complete list of Special Diets if they are not in any recipe in the database then they will not be shown to the user #
     elif request.form['type_category_button'] in ('Vegetarian', 'Vegan', 'Weight Watchers', 'Gluten-free', 'Ketogenic', 'High-protein', 'Low Fat', 'Low-Carb', 'Other Diet', 'Not Applicable'):
          category_results=mongo.db.meal_type.find({'special_diet': request.form['type_category_button']})
          return render_template('search_results.html',
@@ -521,6 +551,25 @@ def category_results():
          special_diet_type_category=special_diet_type_category,
          difficulty_type_category=difficulty_type_category,
          task=category_results)     
+
+
+# Contact Us Form and Function for Sending the email#
+@app.route('/contact_us', methods=['POST', 'GET'])
+def contact_us():
+    return render_template('contact_us.html')
+
+@app.route('/send_email', methods=['POST', 'GET'])
+def send_email():
+    email = Message('You Have Mail', recipients=[MAIL_RECIPIENT])
+    msg_name = request.form['name']
+    msg_email = request.form['email_address']
+    msg_message = request.form['message']
+    email.html = 'From:'+ msg_name + '<br> Email:'+ msg_email + '<br> Message: <br>' + msg_message
+    
+    mail.send(email)
+    return render_template('contact_us.html',
+    flash= flash('Your Email Has been Sent!'))
+
        
 
 if __name__ == '__main__':
