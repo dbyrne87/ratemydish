@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 
         <div class="jumbotron-fluid">
-            <h3 id="search-text">Search</h3>
+            <h3 class="search-text">Search</h3>
             <br>
             <div class="form-group col-8 mx-auto">
                 <form method="POST" action="{{ url_for('search') }}">
@@ -17,7 +17,7 @@
                 <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#meal-type-category"><i class="fas fa-utensils"></i> Meal Type</button>
                 <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#cuisine-type-category"><i class="fas fa-flag-usa"></i> Cuisine Origin</button>
                 <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#special-diet-type-category"><i class="fas fa-bread-slice"></i> Special Diet</button>
-                <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#difficulty-type-category"><i class="fas fa-search"></i> Difficulty</button>
+                <button type="button" class="btn btn-outline-success col-6 col-lg-2 category-buttons" data-toggle="modal" data-target="#difficulty-type-category"><i class="fas fa-thermometer-three-quarters"></i> Difficulty</button>
 
             </form>
             <!-- Modal -->

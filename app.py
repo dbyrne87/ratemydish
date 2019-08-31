@@ -258,6 +258,7 @@ def add_recipe():
 def insert_recipe():
     meals=mongo.db.meal_type
     meals.insert_one(request.form.to_dict())
+    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://upload.wikimedia.org/wikipedia/en/f/f9/No-image-available.jpg'}})
     mongo.db.meal_type.find_and_modify( {'likes': '0'}, update={"$set": {'likes': 0, 'dislikes': 0, 'comments': [] }})
     return render_template('addrecipe.html',
             flash=flash('Your Recipe Has Been Added!'),
@@ -463,6 +464,7 @@ def update_recipe():
     except KeyError:
         pass
     
+    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://upload.wikimedia.org/wikipedia/en/f/f9/No-image-available.jpg'}})
     return render_template("home.html", 
     most_liked=mongo.db.meal_type.find(),
     favourites=mongo.db.meal_type.find(),

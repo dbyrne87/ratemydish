@@ -58,7 +58,7 @@ a:hover {
   position: fixed;
   bottom: 6em;
   right: 0.5em;
-  background-color: #2ECC71;
+  background-color: #2ecc71;
   border-radius: .4em;
   box-shadow: -5px -5px 5px grey;
   width: 150px;
@@ -76,7 +76,7 @@ a:hover {
   width: 0;
   height: 0;
   border: 24px solid transparent;
-  border-top-color: #2ECC71;
+  border-top-color: #2ecc71;
   border-bottom: 0;
   border-right: 0;
   margin-left: -12px;
@@ -98,8 +98,15 @@ p {
   padding-left: 20px;
 }
 
+/* Any Sub Headings */
+.sub-heading {
+  padding: 20px 0px;
+  border-bottom: 2px solid #FED300;
+  color: black;
+}
 
-/* Our Favourites, Most Liked & Recipe List Page */
+
+/* Our Favourites, Most Liked Sections & Recipe List Page */
 .card-img-top{
   max-height:142px;
 }
@@ -138,14 +145,15 @@ label{
 
 /* home.html*/
 
-#search-text {
-  padding-top: 35px;
+.search-text {
+  padding-top: 35px; /* Also in search_results.html*/
 }
 
 .jumbotron-fluid {
-  background-image: url("/static/media/jumbotron-img.jpg");
+  background-image: url("/static/media/jumbotron-img.jpg"); /* Also in search_results.html*/
   background-size: cover;
   height: 100%;
+  margin-top:50px;
 }
 
 hr {
@@ -182,16 +190,6 @@ h3 {
   border-radius:0;
   background-color:#2ecc71;
   color:white;
-}
-
-.sub-heading {
-  padding: 20px 0px;
-  border-bottom: 2px solid #FED300;
-}
-
-.sub-heading {
-  color: black;
-
 }
 
 
@@ -235,7 +233,7 @@ video {
   transition: 1s opacity;
 }
 
-.video-background {
+#video-background {
   position: relative;
   width: 100%;
   height: 100vh;
@@ -259,14 +257,10 @@ video {
 
 
 /* Contact , Add Recipe & Edit Recipe Page Forms */
-.field-padding {
+
+.field-padding { /* Also In contact_us.html */
   margin-bottom: 20px;
 
-}
-
-.input-group-text {
-  background-color: #2ECC71;
-  color: white;
 }
 
 #btnAdd_1, 
@@ -280,7 +274,7 @@ video {
   margin-top: 30px;
 }
 
-#add_recipe_card {
+.add_recipe_card {
   margin-top: 75px;
 }
 
@@ -296,14 +290,15 @@ video {
 
 
 /*   recipepage.html    */
-#recipe-page-title{
+.recipe-page-title{
  font-size:40px; 
  padding-top:26px;
 }
 
 #recipe-page-image{
   margin:27px 20px 10px 10px;
-  max-width:50vw;
+  max-width:40vw;
+  max-height:60vh;
   padding:0;
   box-shadow: 10px 10px 4px rgba(0, 0, 0, .5);
 }
@@ -348,32 +343,29 @@ li:empty{
   margin-top:20px;
 }
 
-.have-your-say-content{
+#have-your-say-content{
   text-align:left !important;
 }
 
-.md-textarea:focus {
+#comment:focus {
   border-color: #FED300 !important;
   box-shadow: inset 0 1px 1px rgba(254, 211, 0, 0.075), 0 0 8px rgba(254, 211, 0, 0.6) !important;
 }
 
 /* ########   Media Queries   ######## */
 
+/* ########   Media Query For base.html Navbar   ######## */
 @media (min-width: 342px) {
   .navbar-toggler {
     top: 55px;
     right: 42px;
     position: absolute;
     padding: 2px;
-  }  
+  } 
 }
 
+/* ########   Media Query For recipepage.html Ingredient & Instruction Lists   ######## */
 @media (max-width: 576px) {
-  .video-background {
-    position: relative;
-    width: 100%;
-    height: 150vh;
-  }
   #recipe-page-list-boxes-first{
     margin-top:17px !important;
   }
@@ -382,7 +374,7 @@ li:empty{
   }
 }
 
-
+/* ########   Media Query For base.html Navbar Mobile Menu   ######## */
 @media (max-width:767px) {
   .fixed-top {
     top: -40px;
@@ -398,6 +390,7 @@ li:empty{
   }
 } 
 
+/* ########   Media Query For recipepage.html Recipe Image   ######## */
 @media (max-width:992px) {
   #recipe-page-image{
   margin:0;
@@ -406,18 +399,70 @@ li:empty{
 
 }
 
+/* ########   Media Query For home.html & search_results.html  & recipepage.html ######## */
 @media (max-width:1025px) {
-  .category-buttons {
+  .category-buttons { /* Jumbotron Buttons */
     margin: 10px 0px;
   }
-   .recipe-page-list-boxes{
+   .recipe-page-list-boxes{ /* All Recipe Related boxes in the recipepage.html */
     top:0;
     margin-bottom:2px;
    }   
 }
 
+/* ########   Media Query For recipepage.html Ingredient & Instruction List, First Row of Inputs  ######## */
 @media (max-width:1125px) {
   #recipe-page-list-boxes-first{
     margin-top:5px;
+  }
+}
+
+
+/* ########   All Media Queries For register_login.html Background Video ######## */
+@media (min-width: 770px) {
+  #video-background {
+    position: relative;
+    width: 100%;
+    height: 110vh;
+  }
+}
+
+@media (max-width: 737px) {
+  #video-background {
+    position: relative;
+    width: 100%;
+    height: 200vh;
+  }
+}
+
+@media (max-width: 641px) {
+  #video-background {
+    position: relative;
+    width: 100%;
+    height: 235vh;
+  }
+}
+
+@media (max-width: 414px) {
+  #video-background {
+    position: relative;
+    width: 100%;
+    height: 140vh;
+  }
+}
+
+@media (min-width: 822px) and (min-width: 374px) {
+  #video-background {
+    position: relative;
+    width: 100%;
+    height: 210vh;
+  }
+}
+
+@media (min-width: 998px) and (min-width: 766px) {
+  #video-background {
+    position: relative;
+    width: 100%;
+    height: 90vh;
   }
 }
