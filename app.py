@@ -628,6 +628,11 @@ def send_email():
     flash= flash('Your Email Has been Sent!'))
 
 
+#if __name__ == '__main__':
+    #app.secret_key = SECRET_KEY
+    #app.run(host=HOST, port=PORT, debug=DEBUG)
+    
 if __name__ == '__main__':
-    app.secret_key = SECRET_KEY
-    app.run(host=HOST, port=PORT, debug=DEBUG)
+app.run(host=os.environ.get('IP'),
+    port=int(os.environ.get('PORT')),
+            debug=True)

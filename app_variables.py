@@ -16,5 +16,5 @@ MAIL_RECIPIENT = 'declangbyrne1987@gmail.com'
 
 SECRET_KEY = 'SssSSHHhhhhHHHhhThis_is_A_s3cr3T'
 HOST = '0.0.0.0' 
-PORT = 5000
-DEBUG = True
+PORT = 8080
+DEBUG = False
