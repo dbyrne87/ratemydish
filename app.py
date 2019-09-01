@@ -512,7 +512,8 @@ def update_recipe():
     special_diet_type_category= special_diet_type_category,
     difficulty_type_category=difficulty_type_category,
     username=mongo.db.users.find_one({"username": session['username']}))
-            
+
+# Function for deleting Recipe. Can only be accessed from the edit_recipe page so only available to the recipe owner#            
 @app.route('/delete_recipe', methods=['POST'])
 def delete_recipe():
     mongo.db.meal_type.remove({'_id': ObjectId((request.form['recipe_delete-button']))})
