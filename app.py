@@ -627,12 +627,14 @@ def send_email():
     return render_template('contact_us.html',
     flash= flash('Your Email Has been Sent!'))
 
-
+#Settings For Running Locally#
 #if __name__ == '__main__':
     #app.secret_key = SECRET_KEY
     #app.run(host=HOST, port=PORT, debug=DEBUG)
-    
+
+#Settings for Running on Heroku #    
 if __name__ == '__main__':
+    app.secret_key = SECRET_KEY
     app.run(host=os.environ.get('IP'),
     port=int(os.environ.get('PORT')),
             debug=False)
