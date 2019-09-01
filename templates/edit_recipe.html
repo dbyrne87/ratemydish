@@ -18,7 +18,7 @@
                 <div class="col-lg-6">
                     <div class="form-group form-top-margin">
                         <label for="meal_title"><i class="fas fa-utensils"></i> Meal Title</label>
-                        <input type="text" id="meal_title" name="meal_title" class="form-control" placeholder="Recipe Name" value="{{task.meal_title}}" required>
+                        <input type="text" id="meal_title" name="meal_title" class="form-control" placeholder="Recipe Name" value="{{task.meal_title}}" maxlength="34" required>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -262,9 +262,13 @@
                 <div class="text-center">
                     <button type="submit" id='recipe_update-button' name="recipe_update-button" value="{{task._id}}"class="btn btn-outline-success col-lg-4"><i class="fas fa-hamburger"></i>  Update Recipe</button>
                 </div>
+                
+            </div>
         </div>
-    </div>
-</main>    
+    </main>    
+</form>
+<form method="POST" action="{{url_for('delete_recipe')}}">
+    <button type="submit" id="recipe_delete-button" name="recipe_delete-button" class="btn btn-danger col-md-3 col-sm-6" value="{{task._id}}">Delete This Recipe</button>
 </form>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>

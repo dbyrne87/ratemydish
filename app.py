@@ -30,10 +30,11 @@ mongo = PyMongo(app)
 
 # Global Variables used multiple Times#
 # Get Unique and Specific Data from each Key as used in home.html) #
-meal_types_category = mongo.db.meal_type.distinct('meal_type')
-cuisine_type_categories = mongo.db.meal_type.distinct('cuisine_type')
-special_diet_type_category = mongo.db.meal_type.distinct('special_diet')
+meal_types_category = mongo.db.meal_types.distinct('meal_type')
+cuisine_type_categories = mongo.db.cuisine_types.distinct('cuisine_types')
+special_diet_type_category = mongo.db.special_diets.distinct('special_diet')
 difficulty_type_category = mongo.db.meal_type.distinct('difficulty')
+
 
 # Homepage will render home.html if user logged in or register.html if not #
 @app.route('/')
@@ -127,20 +128,20 @@ def guest_login():
         difficulty_type_category=difficulty_type_category)    
 
 
-# When a 'Get Recipe' button is clicked, it queries the database for the specific recipe details and returns it to the user in recipepage.html #
+# When a 'Get Recipe' button is clicked, it queries the database for the specific recipe details and returns it to the user in recipe_page.html #
 @app.route('/view_recipe/<search>', methods=['POST', 'GET'])
 def view_recipe(search):
     title_results =  mongo.db.meal_type.find_one( {'_id': ObjectId(request.form['get_recipe']) })
     if 'username' in session:
-        return render_template('recipepage.html', task=title_results,
+        return render_template('recipe_page.html', task=title_results,
         username=mongo.db.users.find_one({"username": session['username']}))
-    return render_template('recipepage.html', task=title_results)   
+    return render_template('recipe_page.html', task=title_results)   
 
 # If User is Logged In then allow them to add a Recipe #    
 @app.route('/add_recipe')
 def add_recipe():
     if 'username' in session:
-        return render_template("addrecipe.html",
+        return render_template("add_recipe.html",
         meal_types= mongo.db.meal_types.find(), # Gets the values from the meal_types collection #
         cuisine_types= mongo.db.cuisine_types.find(), # Gets the values from the cuisine_types collection #
         special_diet= mongo.db.special_diets.find(), # Gets the values from the special_diets collection #                       
@@ -155,10 +156,12 @@ def insert_recipe():
     meals=mongo.db.meal_type
     meals.insert_one(request.form.to_dict()) # inserts all the data to the database #
     # if the image_url wasn't entered give it a default value #
-    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://upload.wikimedia.org/wikipedia/en/f/f9/No-image-available.jpg'}})
+    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://images.pexels.com/photos/277253/pexels-photo-277253.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'}})
     # Modify the initial like & dislike values to a Integer and the comments value to an array #
-    mongo.db.meal_type.find_and_modify( {'likes': '0'}, update={"$set": {'likes': 0, 'dislikes': 0, 'comments': ['No Comments Yet'] }})
-    return render_template('addrecipe.html', # Returns the user to the add_recipe page with success message #
+    mongo.db.meal_type.find_and_modify( {'likes': '0'}, update={"$set": {'likes': 0 }})
+    mongo.db.meal_type.find_and_modify( {'dislikes': '0'}, update={"$set": {'dislikes': 0 }})
+    mongo.db.meal_type.find_and_modify( {'comments': ""}, update={"$set": {'comments': ['No Comments Yet'] }})
+    return render_template('add_recipe.html', # Returns the user to the add_recipe page with success message #
             flash=flash('Your Recipe Has Been Added!'),
             meal_types= mongo.db.meal_types.find(), # Gets the values from the meal_types collection #
             cuisine_types= mongo.db.cuisine_types.find(), # Gets the values from the cuisine_types collection #
@@ -171,10 +174,10 @@ def increase_recipe_likes():
     if 'username' in session:
         mongo.db.meal_type.update( {"_id": ObjectId((request.form['increase_likes_button']))}, { "$inc": { "likes": 1 } } )#Increments by one on each click#
         the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_likes_button']))} )
-        return render_template('recipepage.html', task=the_task,#Refreshes the current page with flash message and updated like#
+        return render_template('recipe_page.html', task=the_task,#Refreshes the current page with flash message and updated like#
         flash=flash('Thanks For Rating This Recipe!'),
         username=mongo.db.users.find_one({"username": session['username']}))
-    return render_template('recipepage.html', task=the_task, #Cannot like a recipe if not logged in#
+    return render_template('recipe_page.html', task=the_task, #Cannot like a recipe if not logged in#
     flash=flash('Sorry You must be logged in to Like a Recipe'))
 
     
@@ -184,10 +187,10 @@ def increase_recipe_dislikes():
     if 'username' in session:
         mongo.db.meal_type.update_one({'_id': ObjectId((request.form['increase_dislikes_button']))}, { "$inc": { "dislikes": 1 } })#Increments by one on each click#
         the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_dislikes_button']))} )
-        return render_template('recipepage.html', task=the_task, #Refreshes the current page with flash message and updated dislike#
+        return render_template('recipe_page.html', task=the_task, #Refreshes the current page with flash message and updated dislike#
         flash=flash('Thanks For Rating This Recipe!'),
         username=mongo.db.users.find_one({"username": session['username']}))
-    return render_template('recipepage.html', task=the_task, #Cannot dislike a recipe if not logged in#
+    return render_template('recipe_page.html', task=the_task, #Cannot dislike a recipe if not logged in#
     flash=flash('Sorry You must be logged in to Dislike a Recipe'))
 
 # If a comment is made it is added to the specific recipe as an array, further comments are added to this array.#
@@ -196,14 +199,22 @@ def increase_recipe_dislikes():
 def add_comment(search):
     if 'username' in session:
         # if comments array is empty it removes the default 'No Comments Yet' before adding the new comment#
-        mongo.db.meal_type.find_and_modify( {'comments': ['No Comments Yet']}, update={"$set": {'comments': [] }})
+        recipe = mongo.db.meal_type.find_one( { '$and': [ {"_id": ObjectId((request.form['add_comment_button']))}, {'comments': ['No Comments Yet'] } ] })
+        if recipe is not None:
+            mongo.db.meal_type.update_one({'_id': ObjectId((request.form['add_comment_button']))}, { "$set": { "comments": [] } })
+            add_this_comment = request.form['comment']# Get the comment from the form #
+            mongo.db.meal_type.update( {"_id": ObjectId((request.form['add_comment_button']))}, { "$push": { "comments": add_this_comment }})# Add the new comment to the array #
+            the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['add_comment_button']))} )
+            return render_template('recipe_page.html', task=the_task,# Refreshes the page with flash message and updated comment#
+            flash=flash('Thank You For Your Comment!'),
+            username=mongo.db.users.find_one({"username": session['username']}))
         add_this_comment = request.form['comment']# Get the comment from the form #
-        mongo.db.meal_type.update( {"_id": ObjectId((request.form['add_comment_button']))}, { "$push": { "comments": add_this_comment }})# Add te new comment to the array #
+        mongo.db.meal_type.update( {"_id": ObjectId((request.form['add_comment_button']))}, { "$push": { "comments": add_this_comment }})# Add the new comment to the array #
         the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['add_comment_button']))} )
-        return render_template('recipepage.html', task=the_task,# Refreshes the page with flash message and updated comment#
+        return render_template('recipe_page.html', task=the_task,# Refreshes the page with flash message and updated comment#
         flash=flash('Thank You For Your Comment!'),
-        username=mongo.db.users.find_one({"username": session['username']}))
-    return render_template('recipepage.html', task=the_task, #Cannot comment on a recipe if not logged in#
+        username=mongo.db.users.find_one({"username": session['username']}))    
+    return render_template('recipe_page.html', task=the_task, #Cannot comment on a recipe if not logged in#
     flash=flash('Sorry You must be logged in to Dislike a Recipe'))
             
 
@@ -234,20 +245,20 @@ def search():
         task=unique)
 
 
-# Get's the _id of the recipe, queries the database for the specific recipe details, renders the editrecipe.html page with the recipe data for updating #
+# Get's the _id of the recipe, queries the database for the specific recipe details, renders the edit_recipe.html page with the recipe data for updating #
 @app.route('/edit_recipe/<search>', methods=['POST', 'GET'])
 def edit_recipe(search):
     the_task =  mongo.db.meal_type.find_one({"_id": ObjectId((request.form['edit_button']))})
     all_categories =  mongo.db.meal_type.find()
     if 'username' in session:
         if session.get("username") == the_task.get("chef_name"): #Only the person who origionaly inputted the recipe can modify it#
-            return render_template('editrecipe.html', task=the_task,
+            return render_template('edit_recipe.html', task=the_task,
             categories=all_categories,
             meal_types= mongo.db.meal_types.find(), # Gets the values from the meal_types collection #
             cuisine_types= mongo.db.cuisine_types.find(), # Gets the values from the cuisine_types collection #
             special_diet= mongo.db.special_diets.find(), # Gets the values from the special_diets collection #                       
             username=mongo.db.users.find_one({"username": session['username']}))
-        return render_template("addrecipe.html", #If the user is not the chef it will bring them to the add_recipe page to add their own recipe#
+        return render_template("add_recipe.html", #If the user is not the chef it will bring them to the add_recipe page to add their own recipe#
         meal_types= mongo.db.meal_types.find(),
         cuisine_types= mongo.db.cuisine_types.find(),
         special_diet= mongo.db.special_diets.find(),
@@ -271,7 +282,7 @@ def update_recipe():
             "prep_time": (request.form['prep_time']), "cook_time": (request.form['cook_time']),
             "servings": (request.form['servings']), "calories": (request.form['calories']),
             "special_diet": (request.form['special_diet']), "image_url": (request.form['image_url']),
-            "likes": likes_count, "dislikes": dislikes_count,
+            "likes": likes_count, "dislikes": dislikes_count, "cuisine_type": (request.form['cuisine_type']),
             "comments": comments_count, "input_ingredients": (request.form['input_ingredients']),
             "input_instructions": (request.form['input_instructions'])
         })
@@ -492,7 +503,7 @@ def update_recipe():
         pass
     
     # If the image_url is empty or has been removed then update it to the default value #
-    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://upload.wikimedia.org/wikipedia/en/f/f9/No-image-available.jpg'}})
+    mongo.db.meal_type.find_and_modify( {'image_url': ''}, update={"$set": {'image_url': 'https://images.pexels.com/photos/1268558/pexels-photo-1268558.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'}})
     return render_template("home.html", 
     most_liked=mongo.db.meal_type.find(),
     favourites=mongo.db.meal_type.find(),
@@ -502,7 +513,19 @@ def update_recipe():
     difficulty_type_category=difficulty_type_category,
     username=mongo.db.users.find_one({"username": session['username']}))
             
-            
+@app.route('/delete_recipe', methods=['POST'])
+def delete_recipe():
+    mongo.db.meal_type.remove({'_id': ObjectId((request.form['recipe_delete-button']))})
+    return render_template("home.html", 
+    most_liked=mongo.db.meal_type.find(),
+    favourites=mongo.db.meal_type.find(),
+    meal_type_category=meal_types_category,
+    cuisine_type_category=cuisine_type_categories,
+    special_diet_type_category= special_diet_type_category,
+    difficulty_type_category=difficulty_type_category,
+    flash=flash('The Recipe Has Been Deleted!'),
+    username=mongo.db.users.find_one({"username": session['username']}))
+
 
 # If Logout Button is clicked then it removes the session cookie and brings them to the register page with message #
 @app.route('/logout')
@@ -512,22 +535,38 @@ def logout():
         flash=flash('You have been Signed Out!'))
 
 # Modal buttons on Hompage, #
-# Queries database and shows in Modal only the Unique values if that particlular Key #
-# If a value such as "Gluten-free" is not a value for a recipe it will not be shown in the list #
-# When value in modal is choosen it will display a list of recipes that contain that value#
+# Queries database and shows in Modal the list of that particlular Key #
+# When value in modal is choosen it will display a list of recipes that contain that value if they exist#
 @app.route('/category_results', methods=['POST', 'GET'])
 def category_results():
-    if request.form['type_category_button'] in ('Breakfast', 'Lunch', 'Dinner', 'Snack'):
+    if request.form['type_category_button'] in ('Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snack'):
         category_results=mongo.db.meal_type.find({'meal_type': request.form['type_category_button']})
+        if 'username' in session:
+            return render_template('search_results.html',
+            meal_type_category= meal_types_category,
+            cuisine_type_category=cuisine_type_categories,
+            special_diet_type_category=special_diet_type_category,
+            difficulty_type_category=difficulty_type_category,
+            username=mongo.db.users.find_one({"username": session['username']}),
+            task=category_results)
         return render_template('search_results.html',
         meal_type_category= meal_types_category,
         cuisine_type_category=cuisine_type_categories,
         special_diet_type_category=special_diet_type_category,
         difficulty_type_category=difficulty_type_category,
         task=category_results)
+        
         # Complete list of Cuisine Origins if they are not in any recipe in the database then they will not be shown to the user #
     elif request.form['type_category_button'] in ('American', 'Chinese', 'French', 'Greek', 'Indian', 'Irish', 'Italian', 'Mexican', 'Thai', 'Turkish', 'Other'):
          category_results=mongo.db.meal_type.find({'cuisine_type': request.form['type_category_button']})
+         if 'username' in session:
+            return render_template('search_results.html',
+            meal_type_category= meal_types_category,
+            cuisine_type_category=cuisine_type_categories,
+            special_diet_type_category=special_diet_type_category,
+            difficulty_type_category=difficulty_type_category,
+            username=mongo.db.users.find_one({"username": session['username']}),
+            task=category_results)
          return render_template('search_results.html',
          meal_type_category= meal_types_category,
          cuisine_type_category=cuisine_type_categories,
@@ -537,14 +576,31 @@ def category_results():
                  # Complete list of Special Diets if they are not in any recipe in the database then they will not be shown to the user #
     elif request.form['type_category_button'] in ('Vegetarian', 'Vegan', 'Weight Watchers', 'Gluten-free', 'Ketogenic', 'High-protein', 'Low Fat', 'Low-Carb', 'Other Diet', 'Not Applicable'):
          category_results=mongo.db.meal_type.find({'special_diet': request.form['type_category_button']})
+         if 'username' in session:
+            return render_template('search_results.html',
+            meal_type_category= meal_types_category,
+            cuisine_type_category=cuisine_type_categories,
+            special_diet_type_category=special_diet_type_category,
+            difficulty_type_category=difficulty_type_category,
+            username=mongo.db.users.find_one({"username": session['username']}),
+            task=category_results)
          return render_template('search_results.html',
          meal_type_category= meal_types_category,
          cuisine_type_category=cuisine_type_categories,
          special_diet_type_category=special_diet_type_category,
          difficulty_type_category=difficulty_type_category,
          task=category_results)
+         
     elif request.form['type_category_button'] in ('Easy', 'Medium', 'Hard'):
          category_results=mongo.db.meal_type.find({'difficulty': request.form['type_category_button']})
+         if 'username' in session:
+            return render_template('search_results.html',
+            meal_type_category= meal_types_category,
+            cuisine_type_category=cuisine_type_categories,
+            special_diet_type_category=special_diet_type_category,
+            difficulty_type_category=difficulty_type_category,
+            username=mongo.db.users.find_one({"username": session['username']}),
+            task=category_results)
          return render_template('search_results.html',
          meal_type_category= meal_types_category,
          cuisine_type_category=cuisine_type_categories,
@@ -570,10 +626,7 @@ def send_email():
     return render_template('contact_us.html',
     flash= flash('Your Email Has been Sent!'))
 
-       
 
 if __name__ == '__main__':
     app.secret_key = SECRET_KEY
     app.run(host=HOST, port=PORT, debug=DEBUG)
-    
-    

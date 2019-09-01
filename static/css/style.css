@@ -47,9 +47,15 @@ a:hover {
   color: #FDFDFF;
 }
 
-.nav-link,
-.card-header{
+.nav-link {
   padding: 8px 25px !important;
+  color: #FDFDFF !important;
+
+}
+
+.card-header{
+  min-height:73px;
+  padding: 8px 8px !important;
   color: #FDFDFF !important;
 
 }
@@ -108,7 +114,7 @@ p {
 
 /* Our Favourites, Most Liked Sections & Recipe List Page */
 .card-img-top{
-  max-height:142px;
+  max-height:160px;
 }
 
 .card {
@@ -186,7 +192,7 @@ h3 {
 .selection-button{
   padding: 20px 0px;
   border:none;
-  border-bottom: 3px solid white;
+  border-bottom: 3px solid #FED300;
   border-radius:0;
   background-color:#2ecc71;
   color:white;
