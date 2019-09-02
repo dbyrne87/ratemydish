@@ -1,13 +1,18 @@
 {% extends 'base.html' %} {% block content %}
-
+    {% with messages = get_flashed_messages() %} 
+        {% if messages %} 
+            {% for message in messages %}
+                <div class=" col-sm-6 alert alert-warning mx-auto" role="alert">
+                    {{ message }}
+                </div>  
+            {% endfor %} 
+        {% endif %} 
+    {% endwith %}
     <form class="add_recipe_card" method="POST" action="{{ url_for('send_email') }}">
         <main class="card">
             <h1 class="card-header text-center">Contact us</h1>
         
             <div class="card-body">
-                {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
-                    <h3 class="text-center">{{ message }}</h3>
-                {% endfor %} {% endif %} {% endwith %}
                 <div>
                     <input type="text" id="name" name="name" class="form-control field-padding" placeholder="Name">
                 </div>
