@@ -10,20 +10,20 @@ from collections import OrderedDict
 
 # Configure Flask and Mail Server #
 app = Flask(__name__, static_url_path='/static')
-app.config["MONGO_DBNAME"] = MONGO_DBNAME
-app.config["MONGO_URI"] = MONGO_URI
+app.config["MONGO_DBNAME"] = 'RateMyDish'
+app.config["MONGO_URI"] = os.getenv('MONGO_URI')
 
 
-app.config['MAIL_SERVER'] = MAIL_SERVER
-app.config['MAIL_PORT'] = MAIL_PORT
-app.config['MAIL_USE_TLS'] = MAIL_USE_TLS
-app.config['MAIL_USE_SSL'] = MAIL_USE_SSL
-app.config['MAIL_USERNAME'] = MAIL_USERNAME
-app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
-app.config['MAIL_DEFAULT_SENDER'] = MAIL_DEFAULT_SENDER
-app.config['MAIL_MAX_EMAILS'] = MAIL_MAX_EMAILS
-app.config['MAIL_SUPRESS_SEND'] = MAIL_SUPRESS_SEND
-app.config['MAIL_ASCII_ATTACHMENTS'] = MAIL_ASCII_ATTACHMENTS
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
+app.config['MAIL_USE_TLS'] = ('MAIL_USE_TLS')
+app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL')
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+app.config['MAIL_MAX_EMAILS'] = os.getenv('MAIL_MAX_EMAILS')
+app.config['MAIL_SUPRESS_SEND'] = os.getenv('MAIL_SUPRESS_SEND')
+app.config['MAIL_ASCII_ATTACHMENTS'] = os.getenv('MAIL_ASCII_ATTACHMENTS')
 
 mail = Mail(app)
 mongo = PyMongo(app)
@@ -624,7 +624,7 @@ def contact_us():
 
 @app.route('/send_email', methods=['POST', 'GET'])
 def send_email():
-    email = Message('You Have Mail', recipients=[MAIL_RECIPIENT])
+    email = Message('You Have Mail', recipients=os.getenv('MAIL_RECIPIENT'))
     msg_name = request.form['name']
     msg_email = request.form['email_address']
     msg_message = request.form['message']
@@ -641,7 +641,7 @@ def send_email():
 
 #Settings for Running on Heroku #    
 if __name__ == '__main__':
-    app.secret_key = SECRET_KEY
+    app.secret_key = os.getenv('SECRET_KEY')
     app.run(host=os.environ.get('IP'),
     port=int(os.environ.get('PORT')),
             debug=False)
