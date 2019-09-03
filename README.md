@@ -223,6 +223,9 @@ Your GitHub repo can be linked from the Heroku dashboard under the "Deploy" tab 
 Pretty Printed for helpful videos on setting up email and a user login in with Flask
 (https://www.youtube.com/channel/UC-QDfvrRIDB6F0bIO4I4HkQ)
 
+Jquery Script .Net for the initial code used for the dynamic form fields
+(https://www.jqueryscript.net/demo/Clone-Form-Sections-Subcomponents/)
+
 UnSplash for the Jumbotron Image.
 (https://unsplash.com/)
 
