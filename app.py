@@ -641,7 +641,7 @@ def send_email():
 
 #Settings for Running on Heroku #    
 if __name__ == '__main__':
-    app.secret_key = SECRET_KEY
+    app.secret_key = os.getenv('SECRET_KEY')
     app.run(host=os.environ.get('IP'),
     port=int(os.environ.get('PORT')),
             debug=False)
