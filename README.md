@@ -1,6 +1,6 @@
 # Code Institute Milestone Project - 3
 ## [RateMyDish](https://ratemydish.herokuapp.com/)
-![Screenshot of website homepage](https://github.com/dbyrne87/dbyrne87.github.io/blob/master/static/assets/images/screenshot-wireframe.jpg?raw=true)
+![Screenshot of website homepage](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/homepage.jpg?raw=true)
 A website designed to allow users to easily users search or share recipes with the community, and benefit from having convenient access to recipes provided by all other members. 
 
 This website can be used to find recipes by,
@@ -35,7 +35,7 @@ Using Modals in the homepage and dropdowns in the add/edit recipe pages informat
 If the client interacts with the website ie. Likes/Dislikes, Comments, Adds/Removes/Deletes a recipe they are informed using flash messages that the process was succesful or why it wasn't. An example of this would be if a "Guest" user tries to add a recipe. They will be brought directly to the log in page with a message explaining why they are there.  
 
 ## Features
-![Website Landing Page](https://github.com/dbyrne87/dbyrne87.github.io/blob/master/static/assets/images/screenshot-wireframe.jpg?raw=true)
+![Website Home Page](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/homepage.jpg?raw=true)
 
 If the user has already registered and logged in as a user they will be brought directly to the home page.
 The home page has a large jumbotron image that is split in two allowing the user to easily see that they can 
@@ -48,8 +48,8 @@ The Navbar & Footer is kept the same throughout the site. If the user is logged 
 A User must be logged in to Add a recipe, if they are not and they click they are brought to the Log In/ Sign Up screen.
 Any User is allowed in the Contact Us page but must add an email address to be allowed send a message. 
 Social media links in the Footer allows all users, to see the websites social media accounts and keep up to date on new features, promoted places etc.  *no social media accounts are setup for this website at present and are for display only.
-![Bootstrap Modal with autocomplete](https://github.com/dbyrne87/dbyrne87.github.io/blob/master/static/assets/images/screenshot-modal.jpg?raw=true)
 
+![Log In Page](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/log_in.jpg?raw=true)
 Should the user be new to the site or not logged in then they will be brought directly to the Log In / Sign Up screen. 
 The autoplay background video is only 8mb and is played in a loop so it should not effect load times a great deal. 
 The page is broken down into 3 sections 
@@ -57,6 +57,7 @@ The page is broken down into 3 sections
 2)The Log In section allows already registered users to access all the features of the website. On submitting the details it is checked against what's in the database and if it matches the user is directed to the homepage. If the username or password is incorrect the site returns a message explaining why the process was not succesful.
 3)Should a user not want to sign up or log in they can click the Guest User button allowing them access to the site to search and view recipes only. Should these users attempt to Add or Modify a recipe then they will be redirected to the Log In screen again and asked to Sign Up or Log In. 
 
+![Add Recipe Page](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/add_recipe.jpg?raw=true)
 The Add recipe page allows users to add their own recipe for users to view and rate.
 All fields are compulsery apart from the Image field which if left blank is given a default image as it is submitted. 
 Dropdowns are heavily relied on so that data is kept uniform and allows for easy searching by other users. Fields such as prep time and cook time are only allowed numbers to keep data the same througout the database. 
@@ -64,18 +65,23 @@ Using Javascript/Jquery I added a dynamic field option to the Ingredients and In
 The first field in each section is mandatory and fields are limited to 10. If the user adds a field it becomes mandatory also and cannot be left blank meaning that only fields with data will be submitted to the database. 
 After the submit the user is given a success flash message. 
 
+![Edit Recipe Page](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/edit_recipe.jpg?raw=true)
 The Edit Recipe page is very similar in appearance and function to the add recipe page allowing the user to easily update the recipe. All data in the database for the recipe is pre loaded/selected in the form meaning the user does not need to fill out the recipe fields again and can just update what they need. 
 All 10 Ingrediant and Instruction fields are loaded so that all information can be easily viewed and modified. Any empty fields not needed can be deleted using the delete button before submitting the form. 
 All previous likes/dislikes & comments the recipe has got before the edit are kept and are not lost in the edit. 
 Only the owner of the recipe is allowed to Edit the Recipe, this is done by matching the logged in username data to the Chef name field. 
 The delete recipe button is only available in the edit recipe page so that only the recipe owner can delete the recipe.
 
+![Search Results Page](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/search_results.jpg?raw=true)
 The Search Results page gives the results from any search made either through the search input field or the modal buttons. If the database has a recipe matching what was searched for it/they will be displayed in card form.
 If nothing is returned the jumbotron search section is shown below a flash message asking the user to try a new search as no recipe was found. 
 
+![Recipe Page Top](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/recipe_page_one.jpg?raw=true)
 The Recipe Page displays all data in a clear manner. Each field is seperated and can easily be read and understood by the user. 
 Large screens have a different layout to the medium and smaller sized screens. The Ingrediant and Instruction sections only display the steps that have values and are numbered to help follow the steps. 
+![Recipe Page Middle](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/ratings.jpg?raw=true)
 Next the Ratings section gets the current likes, dislikes and comments data from the database for the recipe and displays it to the user.
+![Recipe Page Bottom](https://github.com/dbyrne87/ratemydish/blob/master/static/media/readme_images/have_your_say.jpg?raw=true)
 The final section at the bottom of the page allows the user if they are signed in to like, dislike & comment on the recipe. After each click the page is refreshed with the new data and the user receives a success message. The Like and Dislike buttons are a different colour so that they do not blend in to the default colour scheme of the website. The Edit Recipe button can only be used by the owner of the recipe. 
   
 ##  Future Development
