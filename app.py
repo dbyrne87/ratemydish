@@ -5,7 +5,7 @@ from flask import Flask, render_template, redirect, request, url_for, session, f
 from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId 
 from flask_mail import Mail, Message
-from app_variables import *
+#from app_variables import *
 from collections import OrderedDict
 
 # Configure Flask and Mail Server #
