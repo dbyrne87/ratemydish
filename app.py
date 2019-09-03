@@ -237,13 +237,20 @@ def search():
     for i in title_results:    
         if not i in unique:# If the recipe is not already in unique append it to unique#  
             unique.append(i)
-    return render_template('search_results.html', # Returns the list of results to the search_results page#
+    if 'username' in session:        
+        return render_template('search_results.html', # Returns the list of results to the search_results page#
         meal_type_category= meal_types_category,
         cuisine_type_category= cuisine_type_categories,
         special_diet_type_category= special_diet_type_category,
         difficulty_type_category= difficulty_type_category,
+        username=mongo.db.users.find_one({"username": session['username']}),
         task=unique)
-
+    return render_template('search_results.html', # Returns the list of results to the search_results page#
+    meal_type_category= meal_types_category,
+    cuisine_type_category= cuisine_type_categories,
+    special_diet_type_category= special_diet_type_category,
+    difficulty_type_category= difficulty_type_category,
+    task=unique)    
 
 # Get's the _id of the recipe, queries the database for the specific recipe details, renders the edit_recipe.html page with the recipe data for updating #
 @app.route('/edit_recipe/<search>', methods=['POST', 'GET'])
