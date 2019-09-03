@@ -11,7 +11,7 @@ from collections import OrderedDict
 # Configure Flask and Mail Server #
 app = Flask(__name__, static_url_path='/static')
 app.config["MONGO_DBNAME"] = 'RateMyDish'
-app.config["MONGO_URI"] = os.getenv('MONGO_URI')
+app.config["MONGO_URI"] = 'mongodb+srv://root:' + os.getenv('MONGO_URI') + '@myfirstcluster-ur0qm.mongodb.net/RateMyDish?retryWrites=true&w=majority'
 
 
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
