@@ -637,7 +637,7 @@ def send_email():
 #Settings For Running Locally#
 #if __name__ == '__main__':
     #app.secret_key = SECRET_KEY
-    #app.run(host=HOST, port=PORT, debug=DEBUG)
+  #  app.run(host=HOST, port=PORT, debug=DEBUG)
 
 #Settings for Running on Heroku #    
 if __name__ == '__main__':
