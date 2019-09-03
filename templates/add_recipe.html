@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label for="meal_type"><i class="fas fa-utensils"></i> Meal Type</label>
                         <select class="col-md form-control field-padding input-padding" id="meal_type" name="meal_type" required>
-                            <option selected disabled>'Breakfast', 'Lunch' etc.</option>
+                            <option selected value="" disabled>'Breakfast', 'Lunch' etc.</option>
                                 {% for meal_types in meal_types %}
                                     <option>{{meal_types.meal_type}}</option>
                                 {% endfor %}
@@ -45,7 +45,7 @@
                         <div class="form-group">
                             <label for="cuisine_type"><i class="fas fa-flag-usa"></i> Cuisine Origin</label>
                                 <select class="form-control field-padding input-padding" id="cuisine_type" name="cuisine_type" required>
-                                    <option selected disabled>'Chinese', 'French', 'Italian' etc.</option>
+                                    <option selected value="" disabled>'Chinese', 'French', 'Italian' etc.</option>
                                     {% for cuisine_types in cuisine_types %}
                                         <option>{{cuisine_types.cuisine_types}}</option>
                                     {% endfor %}
@@ -56,7 +56,7 @@
                         <div class="form-group">
                             <label for="difficulty"><i class="fas fa-thermometer-three-quarters"></i> Difficulty</label>
                                 <select class="form-control field-padding input-padding" id="difficulty" name="difficulty" required>
-                                    <option selected disabled>'Easy', 'Medium', 'Hard'</option>
+                                    <option selected value="" disabled>'Easy', 'Medium', 'Hard'</option>
                                         <option>Easy</option>
                                         <option>Medium</option>
                                         <option>Hard</option>
@@ -94,7 +94,7 @@
                         <div class="form-group">
                             <label for="special_diet"><i class="fas fa-bread-slice"></i> Special Diet</label>
                             <select class="form-control" id="special_diet" name="special_diet" required>
-                                <option selected disabled>'Gluten Free', 'Low Fat' etc.</option>
+                                <option selected value="" disabled>'Gluten Free', 'Low Fat' etc.</option>
                                     {% for special_diets in special_diet %}
                                         <option>{{special_diets.special_diet}}</option>
                                     {% endfor %}
