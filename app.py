@@ -5,7 +5,6 @@ from flask import Flask, render_template, redirect, request, url_for, session, f
 from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId 
 from flask_mail import Mail, Message
-#from app_variables import *
 from collections import OrderedDict
 
 # Configure Flask and Mail Server #
@@ -171,9 +170,9 @@ def insert_recipe():
 # When Like Button is clicked it Increses Likes in the database of that recipe by 1 each time #
 @app.route('/increase_recipe_likes', methods=['POST', 'GET'])
 def increase_recipe_likes():
+    the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_likes_button']))} )
     if 'username' in session:
         mongo.db.meal_type.update( {"_id": ObjectId((request.form['increase_likes_button']))}, { "$inc": { "likes": 1 } } )#Increments by one on each click#
-        the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_likes_button']))} )
         return render_template('recipe_page.html', task=the_task,#Refreshes the current page with flash message and updated like#
         flash=flash('Thanks For Rating This Recipe!'),
         username=mongo.db.users.find_one({"username": session['username']}))
@@ -184,9 +183,9 @@ def increase_recipe_likes():
 # When Dislike Button is clicked it Increses Dislikes in the database of that recipe by 1 each time #    
 @app.route('/increase_recipe_dislikes', methods=['POST', 'GET'])
 def increase_recipe_dislikes():
+    the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_dislikes_button']))} )    
     if 'username' in session:
         mongo.db.meal_type.update_one({'_id': ObjectId((request.form['increase_dislikes_button']))}, { "$inc": { "dislikes": 1 } })#Increments by one on each click#
-        the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['increase_dislikes_button']))} )
         return render_template('recipe_page.html', task=the_task, #Refreshes the current page with flash message and updated dislike#
         flash=flash('Thanks For Rating This Recipe!'),
         username=mongo.db.users.find_one({"username": session['username']}))
@@ -197,6 +196,7 @@ def increase_recipe_dislikes():
 # If the comment key doesn't exist it is added#
 @app.route('/add_comment/<search>', methods=['POST', 'GET'])
 def add_comment(search):
+    the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['add_comment_button']))} )
     if 'username' in session:
         # if comments array is empty it removes the default 'No Comments Yet' before adding the new comment#
         recipe = mongo.db.meal_type.find_one( { '$and': [ {"_id": ObjectId((request.form['add_comment_button']))}, {'comments': ['No Comments Yet'] } ] })
@@ -204,7 +204,6 @@ def add_comment(search):
             mongo.db.meal_type.update_one({'_id': ObjectId((request.form['add_comment_button']))}, { "$set": { "comments": [] } })
             add_this_comment = request.form['comment']# Get the comment from the form #
             mongo.db.meal_type.update( {"_id": ObjectId((request.form['add_comment_button']))}, { "$push": { "comments": add_this_comment }})# Add the new comment to the array #
-            the_task =  mongo.db.meal_type.find_one( {"_id": ObjectId((request.form['add_comment_button']))} )
             return render_template('recipe_page.html', task=the_task,# Refreshes the page with flash message and updated comment#
             flash=flash('Thank You For Your Comment!'),
             username=mongo.db.users.find_one({"username": session['username']}))
