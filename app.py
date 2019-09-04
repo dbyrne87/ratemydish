@@ -214,7 +214,7 @@ def add_comment(search):
         flash=flash('Thank You For Your Comment!'),
         username=mongo.db.users.find_one({"username": session['username']}))    
     return render_template('recipe_page.html', task=the_task, #Cannot comment on a recipe if not logged in#
-    flash=flash('Sorry You must be logged in to Dislike a Recipe'))
+    flash=flash('Sorry You must be logged in to Comment on a Recipe'))
             
 
 # Search the database for matching word/s in the Meal Title or Ingredients fields  #    
